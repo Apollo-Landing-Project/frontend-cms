@@ -25,7 +25,7 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
+          username: ${{ secrets.USERNAME }}
           key: ${{ secrets.PRIVATE_KEY }}
           script: |
             cd ~/apollo/frontend-cms
