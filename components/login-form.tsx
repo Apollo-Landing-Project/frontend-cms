@@ -52,7 +52,6 @@ export function LoginForm({
 			toast.success(json.message);
 			setUser(json.data);
 
-			router.refresh();
 			router.push("/admin/beranda");
 		}
 	};

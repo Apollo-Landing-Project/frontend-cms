@@ -127,7 +127,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const userData = {
 		name: user?.name || "Loading...",
 		email: user?.email || "",
-		avatar: user?.avatar || "/default-avatar.png",
+		avatar: user?.avatar || null,
 	};
 
 	return (
