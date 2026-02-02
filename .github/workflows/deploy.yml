@@ -28,7 +28,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_KEY }}
           script: |
-            cd /var/www/apollo/frontend-cms
+            cd ~/apollo/frontend-cms
             git pull
             npm install
             npm run build
