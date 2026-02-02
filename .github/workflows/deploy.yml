@@ -27,6 +27,8 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_NAME }}
           key: ${{ secrets.VPS_KEY }}
+          port: 22
+          request_pty: true
           script: |
             cd ~/apollo/frontend-cms
             git pull
