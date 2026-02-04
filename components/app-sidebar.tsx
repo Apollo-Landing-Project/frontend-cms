@@ -15,101 +15,79 @@ import { useUserStore } from "@/store/setUserStore";
 
 import {
 	Info,
-	History,
-	Users,
-	Building2,
 	Car,
-	Key,
-	Wrench,
-	Search,
 	TrendingUp,
-	FileDown,
 	Newspaper,
 	Heart,
-	MapPin,
-	Mail,
 	LayoutDashboard,
+	FileText,
+	Settings,
 } from "lucide-react";
 
 const data = {
 	navMain: [
+		// =========================
+		// HALAMAN
+		// =========================
 		{
-			title: "Profil Perusahaan",
-			url: "/admin/profil",
+			title: "Halaman Website",
+			url: "/admin/pages",
 			icon: Info,
-			isActive: true,
 			items: [
-				{ title: "Visi & Misi", url: "/admin/profil/visi-misi" },
-				{
-					title: "Struktur Organisasi",
-					url: "/admin/profil/struktur",
-					icon: Users,
-				},
-				{
-					title: "Afiliasi Grup",
-					url: "/admin/profil/afiliasi",
-					icon: Building2,
-				},
-				{ title: "Sejarah", url: "/admin/profil/sejarah", icon: History },
+				{ title: "Home", url: "/admin/pages/home" },
+				{ title: "About UT", url: "/admin/pages/about" },
+				{ title: "Our Service", url: "/admin/pages/services" },
+				{ title: "News", url: "/admin/pages/news" },
+				{ title: "Investor", url: "/admin/pages/investor" },
+				{ title: "Footer", url: "/admin/pages/footer" },
 			],
 		},
+
+		// =========================
+		// CONTENT
+		// =========================
 		{
-			title: "Layanan & Produk",
-			url: "/admin/services",
-			icon: Car,
+			title: "Manajemen Konten",
+			url: "/admin/content",
+			icon: FileText,
 			items: [
-				{ title: "Dealer Mobil Baru", url: "/admin/services/new-cars" },
-				{ title: "Penyewaan Mobil", url: "/admin/services/rental", icon: Key },
 				{
-					title: "Pusat Servis",
-					url: "/admin/services/service-center",
-					icon: Wrench,
+					title: "Service",
+					url: "/admin/content/service",
+					icon: Car,
 				},
 				{
-					title: "Katalog Mobil Bekas",
-					url: "/admin/services/used-cars",
-					icon: Search,
-				},
-			],
-		},
-		{
-			title: "Hubungan Investor",
-			url: "/admin/investor",
-			icon: TrendingUp,
-			items: [
-				{ title: "Market Data", url: "/admin/investor/market-data" },
-				{
-					title: "Pusat Unduhan (PDF)",
-					url: "/admin/investor/downloads",
-					icon: FileDown,
-				},
-				{
-					title: "Investor News",
-					url: "/admin/investor/news",
+					title: "News (Artikel)",
+					url: "/admin/content/news",
 					icon: Newspaper,
 				},
+				{
+					title: "News (CSR)",
+					url: "/admin/content/csr",
+					icon: Heart,
+				},
+				{
+					title: "Report / Investor",
+					url: "/admin/content/report",
+					icon: TrendingUp,
+				},
 			],
 		},
+
+		// =========================
+		// SYSTEM
+		// =========================
 		{
-			title: "Berita & Kegiatan",
-			url: "/admin/news",
-			icon: Newspaper,
+			title: "Pengaturan",
+			url: "/admin/settings",
+			icon: Settings,
 			items: [
-				{ title: "Artikel Umum", url: "/admin/news/articles" },
-				{ title: "CSR", url: "/admin/news/csr", icon: Heart },
-			],
-		},
-		{
-			title: "Hubungi Kami",
-			url: "/admin/contact",
-			icon: Mail,
-			items: [
-				{ title: "Store Locator", url: "/admin/contact/maps", icon: MapPin },
-				{ title: "Formulir Kontak", url: "/admin/contact/form" },
+				{ title: "User Management", url: "/admin/settings/users" },
+				{ title: "Role & Akses", url: "/admin/settings/roles" },
 			],
 		},
 	],
-	// Bisa digunakan untuk akses cepat ke fitur tertentu
+
 	projects: [
 		{
 			name: "Dashboard Utama",

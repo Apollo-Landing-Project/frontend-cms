@@ -93,7 +93,7 @@ export function NavUser({
 									toast.error(json.message || "Failed to log out");
 								} else {
 									toast.success(json.message || "Logged out successfully");
-									router.push("/auht/login");
+									router.push("/auth/login");
 								}
 							}}
 						>
