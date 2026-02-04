@@ -22,6 +22,7 @@ import {
 	LayoutDashboard,
 	FileText,
 	Settings,
+	Send,
 } from "lucide-react";
 
 const data = {
@@ -35,7 +36,7 @@ const data = {
 			icon: Info,
 			items: [
 				{ title: "Home", url: "/admin/pages/home" },
-				{ title: "About UT", url: "/admin/pages/about" },
+				{ title: "About Us", url: "/admin/pages/about" },
 				{ title: "Our Service", url: "/admin/pages/services" },
 				{ title: "News", url: "/admin/pages/news" },
 				{ title: "Investor", url: "/admin/pages/investor" },
@@ -93,6 +94,11 @@ const data = {
 			name: "Dashboard Utama",
 			url: "/admin/beranda",
 			icon: LayoutDashboard,
+		},
+		{
+			name: "Landing Page",
+			url: "https://evaluasipembelajaran.site",
+			icon: Send,
 		},
 	],
 };

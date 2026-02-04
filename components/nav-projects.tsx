@@ -38,7 +38,8 @@ export function NavProjects({
 
 	return (
 		<SidebarGroup className="group-data-[collapsible=icon]:hidden">
-			<SidebarGroupLabel>Projects</SidebarGroupLabel>
+			{/* Isinya adalah untuk dashboard dan link ke website landing */}
+			<SidebarGroupLabel>Links</SidebarGroupLabel>
 			<SidebarMenu>
 				{projects.map((item) => (
 					<SidebarMenuItem key={item.name}>
