@@ -374,9 +374,6 @@ export default function HomePageForm({
 
 	// --- TRANSLATE HANDLER ---
 	const handleAutoTranslate = async () => {
-		const token = localStorage.getItem("token");
-		if (!token) return toast.error("Session expired.");
-
 		setIsTranslating(true);
 
 		const fieldMapping = [
@@ -422,8 +419,8 @@ export default function HomePageForm({
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
-							Authorization: `Bearer ${token}`,
 						},
+						credentials: "include",
 						body: JSON.stringify({ texts: chunkTexts, target_lang: "en" }),
 					},
 				);
