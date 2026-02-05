@@ -4,8 +4,9 @@ import React, { useState, useEffect } from "react";
 import { useForm, UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import Cropper from "react-easy-crop";
+import type { Area } from "react-easy-crop";
 import {
 	Loader2,
 	UploadCloud,
@@ -49,15 +50,48 @@ import {
 import { Slider } from "@/components/ui/slider";
 import Image from "next/image";
 
-// --- 1. SCHEMA VALIDATION ---
+// --- 1. TYPES & INTERFACES ---
+
+// Interface untuk Initial Data dari Backend (Menggantikan 'any')
+interface HomePageContent {
+	hero_title?: string;
+	hero_desc?: string;
+	about_us_title?: string;
+	about_us_desc?: string;
+	services_title?: string;
+	services_desc?: string;
+	news_title?: string;
+	news_desc?: string;
+	partners_title?: string;
+	partners_desc?: string;
+	contact_title?: string;
+	contact_desc?: string;
+}
+
+interface HomePageData {
+	id: string;
+	hero_bg: string[];
+	about_us_years_exp: number;
+	about_us_products: number;
+	about_us_countries: number;
+	about_us_brands: number;
+	contact_email: string[];
+	contact_phone: string[];
+	contact_link_map?: string;
+	contact_address?: string;
+	homePageId?: HomePageContent;
+	homePageEn?: HomePageContent;
+}
+
+// --- 2. SCHEMA VALIDATION ---
 const baseSchema = z.object({
-	about_us_years_exp: z.number().min(0),
-	about_us_products: z.number().min(0),
-	about_us_countries: z.number().min(0),
-	about_us_brands: z.number().min(0),
+	about_us_years_exp: z.coerce.number().min(0),
+	about_us_products: z.coerce.number().min(0),
+	about_us_countries: z.coerce.number().min(0),
+	about_us_brands: z.coerce.number().min(0),
 	contact_email: z.string().min(1, "Email is required"),
 	contact_phone: z.string().min(1, "Phone is required"),
-	contact_link_map: z.string().url().or(z.literal("")), // Allow empty string initially if needed, or strict url
+	contact_link_map: z.string().url().or(z.literal("")),
 	contact_address: z.string().min(1, "Address is required"),
 
 	// ID
@@ -91,7 +125,7 @@ const baseSchema = z.object({
 
 type FormValues = z.infer<typeof baseSchema>;
 
-// --- 2. HELPER COMPONENTS ---
+// --- 3. HELPER COMPONENTS ---
 
 interface FormInputProps {
 	id: string;
@@ -154,7 +188,7 @@ const SectionGroup = ({
 	children,
 }: {
 	title: string;
-	icon?: any;
+	icon?: React.ElementType; // Fix type for Icon
 	children: React.ReactNode;
 }) => (
 	<div className="rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
@@ -166,10 +200,10 @@ const SectionGroup = ({
 	</div>
 );
 
-// --- 3. MAIN COMPONENT ---
+// --- 4. MAIN COMPONENT ---
 
 interface HomePageFormProps {
-	initialData?: any;
+	initialData?: HomePageData; // Ganti 'any' dengan Interface
 	isEditMode?: boolean;
 }
 
@@ -180,7 +214,7 @@ export default function HomePageForm({
 	const [isLoading, setIsLoading] = useState(false);
 	const [isTranslating, setIsTranslating] = useState(false);
 
-	// Image Slots
+	// Image Slots Type
 	type ImageSlot =
 		| { type: "url"; url: string }
 		| { type: "file"; file: File; preview: string }
@@ -193,26 +227,20 @@ export default function HomePageForm({
 	const [cropImageSrc, setCropImageSrc] = useState<string | null>(null);
 	const [crop, setCrop] = useState({ x: 0, y: 0 });
 	const [zoom, setZoom] = useState(1);
-	const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
 
-	// --- FORM INITIALIZATION (FIXED DEFAULT VALUES) ---
-	const form = useForm<FormValues>({
+	const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
+
+	const form = useForm({
 		resolver: zodResolver(baseSchema),
 		defaultValues: {
-			// NUMBER FIELDS (Set to 0)
 			about_us_years_exp: 0,
 			about_us_products: 0,
 			about_us_countries: 0,
 			about_us_brands: 0,
-
-			// STRING FIELDS (Set to empty string "")
-			// GENERAL
 			contact_email: "",
 			contact_phone: "",
 			contact_link_map: "",
 			contact_address: "",
-
-			// ID
 			hero_title: "",
 			hero_desc: "",
 			about_us_title: "",
@@ -225,8 +253,6 @@ export default function HomePageForm({
 			partners_desc: "",
 			contact_title: "",
 			contact_desc: "",
-
-			// EN
 			hero_title_en: "",
 			hero_desc_en: "",
 			about_us_title_en: "",
@@ -254,9 +280,27 @@ export default function HomePageForm({
 			}
 			setSlots(loadedSlots);
 
-			// Fields
+			// Fields Mapping
 			const flatData = {
-				...initialData,
+				// Base
+				about_us_years_exp: initialData.about_us_years_exp,
+				about_us_products: initialData.about_us_products,
+				about_us_countries: initialData.about_us_countries,
+				about_us_brands: initialData.about_us_brands,
+				contact_link_map: initialData.contact_link_map || "",
+				contact_address: initialData.contact_address || "",
+
+				// Arrays to String
+				contact_email:
+					Array.isArray(initialData.contact_email) ?
+						initialData.contact_email.join(", ")
+					:	"",
+				contact_phone:
+					Array.isArray(initialData.contact_phone) ?
+						initialData.contact_phone.join(", ")
+					:	"",
+
+				// ID Content
 				hero_title: initialData.homePageId?.hero_title || "",
 				hero_desc: initialData.homePageId?.hero_desc || "",
 				about_us_title: initialData.homePageId?.about_us_title || "",
@@ -270,6 +314,7 @@ export default function HomePageForm({
 				contact_title: initialData.homePageId?.contact_title || "",
 				contact_desc: initialData.homePageId?.contact_desc || "",
 
+				// EN Content
 				hero_title_en: initialData.homePageEn?.hero_title || "",
 				hero_desc_en: initialData.homePageEn?.hero_desc || "",
 				about_us_title_en: initialData.homePageEn?.about_us_title || "",
@@ -282,17 +327,11 @@ export default function HomePageForm({
 				partners_desc_en: initialData.homePageEn?.partners_desc || "",
 				contact_title_en: initialData.homePageEn?.contact_title || "",
 				contact_desc_en: initialData.homePageEn?.contact_desc || "",
-
-				contact_email:
-					Array.isArray(initialData.contact_email) ?
-						initialData.contact_email.join(", ")
-					:	initialData.contact_email || "",
-				contact_phone:
-					Array.isArray(initialData.contact_phone) ?
-						initialData.contact_phone.join(", ")
-					:	initialData.contact_phone || "",
 			};
-			form.reset(flatData);
+
+			// Reset form with new values
+			// Note: We need to cast this because 'reset' expects the inferred values
+			form.reset(flatData as any);
 		}
 	}, [initialData, isEditMode, form]);
 
@@ -328,13 +367,16 @@ export default function HomePageForm({
 				setActiveSlotIndex(null);
 				toast.success("Image cropped!");
 			}
-		} catch (e) {
+		} catch {
 			toast.error("Crop failed");
 		}
 	};
 
 	// --- TRANSLATE HANDLER ---
 	const handleAutoTranslate = async () => {
+		const token = localStorage.getItem("token");
+		if (!token) return toast.error("Session expired.");
+
 		setIsTranslating(true);
 
 		const fieldMapping = [
@@ -380,8 +422,8 @@ export default function HomePageForm({
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`,
 						},
-						credentials: "include",
 						body: JSON.stringify({ texts: chunkTexts, target_lang: "en" }),
 					},
 				);
@@ -390,7 +432,7 @@ export default function HomePageForm({
 				let result;
 				try {
 					result = JSON.parse(textResponse);
-				} catch (e) {
+				} catch {
 					throw new Error("Translation service error");
 				}
 
@@ -412,13 +454,14 @@ export default function HomePageForm({
 			});
 			toast.success("Auto Translate Complete!");
 		} catch (error: any) {
-			toast.error(error.message);
+			toast.error(error.message || "Translation Error");
 		} finally {
 			setIsTranslating(false);
 		}
 	};
 
 	// --- SUBMIT ---
+	// Gunakan tipe FormValues di sini agar data ter-type dengan benar
 	const onSubmit = async (data: FormValues) => {
 		if (slots.some((s) => s === null))
 			return toast.error("Please fill all 3 image slots.");
@@ -451,8 +494,9 @@ export default function HomePageForm({
 			}
 		});
 
+		// Handle URL based on mode
 		const url =
-			isEditMode ?
+			isEditMode && initialData?.id ?
 				`${process.env.NEXT_PUBLIC_API_URL}/page/home/${initialData.id}`
 			:	`${process.env.NEXT_PUBLIC_API_URL}/page/home`;
 		const method = isEditMode ? "PUT" : "POST";
@@ -464,7 +508,7 @@ export default function HomePageForm({
 				body: formData,
 			});
 			const result = await res.json();
-			console.log({ result });
+
 			if (!res.ok) throw new Error(result.message);
 			toast.success(
 				isEditMode ? "Updated successfully" : "Created successfully",
@@ -480,6 +524,8 @@ export default function HomePageForm({
 
 	return (
 		<div className="space-y-8">
+			<Toaster position="top-right" />
+
 			{/* HEADER CONTROLS */}
 			<div className="flex justify-end items-center mb-2">
 				<Button
@@ -498,7 +544,8 @@ export default function HomePageForm({
 			</div>
 
 			<form onSubmit={form.handleSubmit(onSubmit)}>
-				{/* === SECTION 1: HERO IMAGES === */}
+				{/* ... (BAGIAN UI IMAGE, SAMA SEPERTI SEBELUMNYA) ... */}
+				{/* ... Paste ulang bagian Card Image di sini ... */}
 				<Card className="mb-8 border-slate-200 shadow-sm">
 					<CardHeader className="pb-4 border-b border-slate-100 bg-slate-50/50">
 						<CardTitle className="flex items-center gap-2 text-base text-slate-800">
@@ -579,6 +626,9 @@ export default function HomePageForm({
 						</div>
 					</CardContent>
 				</Card>
+
+				{/* ... (BAGIAN UI INPUT GRID, SAMA SEPERTI SEBELUMNYA) ... */}
+				{/* Paste ulang Grid Input dan Tabs di sini (tidak ada perubahan pada bagian JSX) */}
 
 				<div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 					{/* === LEFT COLUMN: GLOBAL CONFIGS (Col-Span-4) === */}
