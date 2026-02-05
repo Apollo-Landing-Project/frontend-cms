@@ -1,6 +1,8 @@
 "use client";
 
+import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import HomePageForm from "./HomePageForm";
 
 const UpdateHomePage = ({ id }: { id: string }) => {
 	const [data, setData] = useState(null);
@@ -21,7 +23,9 @@ const UpdateHomePage = ({ id }: { id: string }) => {
 				<Loader2 className="animate-spin" />
 			</div>
 		);
-	return <div>UpdateHomePage</div>;
+	return (
+		<div>{data && <HomePageForm isEditMode={true} initialData={data} />}</div>
+	);
 };
 
 export default UpdateHomePage;

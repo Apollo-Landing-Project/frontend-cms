@@ -1,7 +1,5 @@
 "use client";
 import { AppSidebar } from "@/components/app-sidebar";
-import CreateHomePage from "@/components/pages/home/CreateHomePage";
-import HomePageForm from "@/components/pages/home/HomePageForm";
 import UpdateHomePage from "@/components/pages/home/UpdateHomePage";
 import {
 	Breadcrumb,
