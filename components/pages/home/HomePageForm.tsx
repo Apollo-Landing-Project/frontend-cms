@@ -51,10 +51,10 @@ import Image from "next/image";
 
 // --- 1. SCHEMA VALIDATION ---
 const baseSchema = z.object({
-	about_us_years_exp: z.coerce.number().min(0),
-	about_us_products: z.coerce.number().min(0),
-	about_us_countries: z.coerce.number().min(0),
-	about_us_brands: z.coerce.number().min(0),
+	about_us_years_exp: z.number().min(0),
+	about_us_products: z.number().min(0),
+	about_us_countries: z.number().min(0),
+	about_us_brands: z.number().min(0),
 	contact_email: z.string().min(1, "Email is required"),
 	contact_phone: z.string().min(1, "Phone is required"),
 	contact_link_map: z.string().url().or(z.literal("")), // Allow empty string initially if needed, or strict url
