@@ -23,6 +23,7 @@ const UpdateHomePage = ({ id }: { id: string }) => {
 				if (json.status == "failed") {
 					toast.error(json.message || "Failed to load homepage data");
 				} else {
+					console.log({ data: json.data });
 					setData(json.data || json);
 					toast.success("Homepage data loaded successfully");
 				}

@@ -219,7 +219,9 @@ export default function HomePageList() {
 										variant="ghost"
 										size="icon"
 										className="h-8 w-8 text-slate-500 hover:text-blue-600 hover:bg-blue-50"
-										onClick={() => router.push(`/admin/pages/home/${item.id}`)}
+										onClick={() =>
+											router.push(`/admin/pages/home/update/${item.id}`)
+										}
 										title="Edit"
 									>
 										<Edit size={16} />
