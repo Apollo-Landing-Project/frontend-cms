@@ -49,6 +49,7 @@ import {
 } from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 // --- 1. TYPES & INTERFACES ---
 
@@ -267,6 +268,7 @@ export default function HomePageForm({
 			contact_desc_en: "",
 		},
 	});
+	const router = useRouter();
 
 	// --- PREFILL DATA ---
 	useEffect(() => {
@@ -512,6 +514,7 @@ export default function HomePageForm({
 			toast.success(
 				isEditMode ? "Updated successfully" : "Created successfully",
 			);
+			router.push("/admin/pages/home");
 		} catch (e: any) {
 			toast.error(e.message || "Failed to submit");
 		} finally {
