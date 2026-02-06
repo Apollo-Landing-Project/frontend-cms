@@ -11,11 +11,21 @@ const UpdateHomePage = ({ id }: { id: string }) => {
 
 	useEffect(() => {
 		// Fetch data detail by ID
-		fetch(`${process.env.NEXT_PUBLIC_API_URL}/page/home/${id}`)
+		fetch(`${process.env.NEXT_PUBLIC_API_URL}/page/home/${id}`, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			credentials: "include",
+		})
 			.then((res) => res.json())
 			.then((json) => {
-				setData(json.data || json);
-				toast.success(json.message);
+				if (json.status == "failed") {
+					toast.error(json.message || "Failed to load homepage data");
+				} else {
+					setData(json.data || json);
+					toast.success("Homepage data loaded successfully");
+				}
 			})
 			.catch((err) => console.error(err))
 			.finally(() => setLoading(false));
