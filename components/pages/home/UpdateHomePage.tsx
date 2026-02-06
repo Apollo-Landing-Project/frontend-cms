@@ -3,6 +3,7 @@
 import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import HomePageForm from "./HomePageForm";
+import toast from "react-hot-toast";
 
 const UpdateHomePage = ({ id }: { id: string }) => {
 	const [data, setData] = useState(null);
@@ -12,7 +13,10 @@ const UpdateHomePage = ({ id }: { id: string }) => {
 		// Fetch data detail by ID
 		fetch(`${process.env.NEXT_PUBLIC_API_URL}/page/home/${id}`)
 			.then((res) => res.json())
-			.then((json) => setData(json.data || json))
+			.then((json) => {
+				setData(json.data || json);
+				toast.success(json.message);
+			})
 			.catch((err) => console.error(err))
 			.finally(() => setLoading(false));
 	}, [id]);
