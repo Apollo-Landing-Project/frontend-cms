@@ -449,6 +449,8 @@ export default function HomePageForm({
 					});
 				}
 			});
+			console.log({ fieldMapping, finalTranslatedResults });
+
 			toast.success("Auto Translate Complete!");
 		} catch (error: any) {
 			toast.error(error.message || "Translation Error");
@@ -521,8 +523,6 @@ export default function HomePageForm({
 
 	return (
 		<div className="space-y-8">
-			<Toaster position="top-right" />
-
 			{/* HEADER CONTROLS */}
 			<div className="flex justify-end items-center mb-2">
 				<Button
