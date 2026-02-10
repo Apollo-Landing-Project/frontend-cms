@@ -22,6 +22,7 @@ import {
 	Phone,
 	Globe,
 	Mail,
+	ArrowLeft,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getCroppedImg } from "@/utils/canvasUtils";
@@ -451,7 +452,6 @@ export default function HomePageForm({
 					});
 				}
 			});
-			console.log({ fieldMapping, finalTranslatedResults });
 
 			toast.success("Auto Translate Complete!");
 		} catch (error: any) {
@@ -514,7 +514,9 @@ export default function HomePageForm({
 			toast.success(
 				isEditMode ? "Updated successfully" : "Created successfully",
 			);
-			router.push("/admin/pages/home");
+			setTimeout(() => {
+				router.push("/admin/pages/home");
+			}, 500);
 		} catch (e: any) {
 			toast.error(e.message || "Failed to submit");
 		} finally {
@@ -527,7 +529,18 @@ export default function HomePageForm({
 	return (
 		<div className="space-y-8">
 			{/* HEADER CONTROLS */}
-			<div className="flex justify-end items-center mb-2">
+			<div className="flex justify-between items-center mb-2">
+				<Button
+					type="button"
+					variant="default"
+					size="sm"
+					onClick={() => router.push("/admin/pages/home")}
+					disabled={isTranslating}
+					className="cursor-pointer"
+				>
+					<ArrowLeft /> Back to home
+				</Button>
+
 				<Button
 					type="button"
 					variant="secondary"

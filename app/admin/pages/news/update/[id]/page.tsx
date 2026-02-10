@@ -1,5 +1,6 @@
+"use client";
 import { AppSidebar } from "@/components/app-sidebar";
-import HomePageForm from "@/components/pages/home/HomePageForm";
+import UpdateNewsPage from "@/components/pages/news/UpdateNewsPage";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -15,7 +16,12 @@ import {
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
 
-const page = () => {
+export default async function page({
+	params,
+}: {
+	params: Promise<{ id: string }>;
+}) {
+	const { id } = await params;
 	return (
 		<SidebarProvider>
 			<AppSidebar />
@@ -33,25 +39,23 @@ const page = () => {
 									<BreadcrumbLink href="/admin">Beranda</BreadcrumbLink>
 								</BreadcrumbItem>
 								<BreadcrumbSeparator className="hidden md:block" />
-								<BreadcrumbItem>
-									<BreadcrumbLink href="/admin/pages/home">
-										Home Pages
+								<BreadcrumbItem className="hidden md:block">
+									<BreadcrumbLink href="/admin/pages/news">
+										News Pages
 									</BreadcrumbLink>
 								</BreadcrumbItem>
 								<BreadcrumbSeparator className="hidden md:block" />
 								<BreadcrumbItem>
-									<BreadcrumbPage>Create Home Page</BreadcrumbPage>
+									<BreadcrumbPage>Update News Page</BreadcrumbPage>
 								</BreadcrumbItem>
 							</BreadcrumbList>
 						</Breadcrumb>
 					</div>
 				</header>
-				<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-					<HomePageForm isEditMode={false} />
+				<div className="">
+					<UpdateNewsPage id={id} />
 				</div>
 			</SidebarInset>
 		</SidebarProvider>
 	);
-};
-
-export default page;
+}

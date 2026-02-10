@@ -27,7 +27,7 @@ export async function proxy(req: NextRequest) {
 	if (pathname === "/auth/login" && token) {
 		try {
 			await jwtVerify(token, JWT_SECRET);
-			return NextResponse.redirect(new URL("/admin/beranda", req.url));
+			return NextResponse.redirect(new URL("/admin", req.url));
 		} catch {
 			// Token tidak valid, biarkan akses halaman login
 			return NextResponse.next();

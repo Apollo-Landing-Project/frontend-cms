@@ -27,7 +27,6 @@ export function LoginForm({
 	const setUser = useUserStore((state) => state.setUser);
 
 	const handleSubmit = async () => {
-		console.log(envConfig.apiUrl);
 		const res = await fetch(`${envConfig.apiUrl}/auth/login`, {
 			method: "POST",
 			headers: {
@@ -47,7 +46,7 @@ export function LoginForm({
 			toast.success(json.message);
 			setUser(json.data);
 
-			router.push("/admin/beranda");
+			router.push("/admin");
 		}
 	};
 

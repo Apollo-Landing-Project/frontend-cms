@@ -1,5 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar";
-import HomePageForm from "@/components/pages/home/HomePageForm";
+import HomePageList from "@/components/pages/home/HomePage";
+import NewsPageList from "@/components/pages/news/NewsPageList";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -34,20 +35,14 @@ const page = () => {
 								</BreadcrumbItem>
 								<BreadcrumbSeparator className="hidden md:block" />
 								<BreadcrumbItem>
-									<BreadcrumbLink href="/admin/pages/home">
-										Home Pages
-									</BreadcrumbLink>
-								</BreadcrumbItem>
-								<BreadcrumbSeparator className="hidden md:block" />
-								<BreadcrumbItem>
-									<BreadcrumbPage>Create Home Page</BreadcrumbPage>
+									<BreadcrumbPage>News Pages</BreadcrumbPage>
 								</BreadcrumbItem>
 							</BreadcrumbList>
 						</Breadcrumb>
 					</div>
 				</header>
-				<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-					<HomePageForm isEditMode={false} />
+				<div className="">
+					<NewsPageList />
 				</div>
 			</SidebarInset>
 		</SidebarProvider>

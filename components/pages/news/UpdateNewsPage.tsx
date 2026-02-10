@@ -2,16 +2,16 @@
 
 import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import HomePageForm from "./HomePageForm";
 import toast from "react-hot-toast";
+import NewsPageForm from "./NewsPageForm";
 
-const UpdateHomePage = ({ id }: { id: string }) => {
+const UpdateNewsPage = ({ id }: { id: string }) => {
 	const [data, setData] = useState(null);
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		// Fetch data detail by ID
-		fetch(`${process.env.NEXT_PUBLIC_API_URL}/page/home/${id}`, {
+		fetch(`${process.env.NEXT_PUBLIC_API_URL}/page/news/${id}`, {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -38,8 +38,8 @@ const UpdateHomePage = ({ id }: { id: string }) => {
 			</div>
 		);
 	return (
-		<div>{data && <HomePageForm isEditMode={true} initialData={data} />}</div>
+		<div>{data && <NewsPageForm isEditMode={true} initialData={data} />}</div>
 	);
 };
 
-export default UpdateHomePage;
+export default UpdateNewsPage;
