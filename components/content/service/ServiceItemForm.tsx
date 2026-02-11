@@ -217,15 +217,25 @@ export default function ServiceItemForm({
 	};
 
 	// --- AUTO TRANSLATE (UPDATED WITH CHUNKING) ---
-	const handleAutoTranslate = async () => {
+	const handleAutoTranslate = async (lang: string) => {
 		setIsTranslating(true);
+		let fieldMapping;
 
-		const fieldMapping = [
-			{ src: "title", dest: "title_en" },
-			{ src: "desc", dest: "desc_en" },
-			{ src: "quote", dest: "quote_en" },
-			{ src: "location", dest: "location_en" },
-		];
+		if (lang == "en") {
+			fieldMapping = [
+				{ src: "title", dest: "title_en" },
+				{ src: "desc", dest: "desc_en" },
+				{ src: "quote", dest: "quote_en" },
+				{ src: "location", dest: "location_en" },
+			];
+		} else {
+			fieldMapping = [
+				{ src: "title_en", dest: "title" },
+				{ src: "desc_en", dest: "desc" },
+				{ src: "quote_en", dest: "quote" },
+				{ src: "location_en", dest: "location" },
+			];
+		}
 
 		const textsToTranslate = fieldMapping.map(
 			(f) => getValues(f.src as any) || "",
@@ -254,7 +264,7 @@ export default function ServiceItemForm({
 						method: "POST",
 						headers: { "Content-Type": "application/json" },
 						credentials: "include",
-						body: JSON.stringify({ texts: chunkTexts, target_lang: "en" }),
+						body: JSON.stringify({ texts: chunkTexts, target_lang: lang}),
 						cache: "no-store",
 					},
 				);
@@ -338,17 +348,34 @@ export default function ServiceItemForm({
 						{isEditMode ? "Edit Service" : "Create New Service"}
 					</h1>
 				</div>
-				<Button
-					variant="secondary"
-					onClick={handleAutoTranslate}
-					disabled={isTranslating}
-					className="text-purple-700 bg-purple-50 border-purple-200"
-				>
-					{isTranslating ?
-						<Loader2 className="animate-spin mr-2 h-4 w-4" />
-					:	<Sparkles className="mr-2 h-4 w-4" />}
-					Auto Translate (ID → EN)
-				</Button>
+				<div>
+					<Button
+						type="button"
+						variant="secondary"
+						size="sm"
+						onClick={() => handleAutoTranslate("id")}
+						disabled={isTranslating}
+						className="text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200"
+					>
+						{isTranslating ?
+							<Loader2 className="animate-spin mr-2 h-4 w-4" />
+						:	<Sparkles className="mr-2 h-4 w-4" />}
+						Auto Translate (EN → ID)
+					</Button>
+					<Button
+						type="button"
+						variant="secondary"
+						size="sm"
+						onClick={() => handleAutoTranslate("en")}
+						disabled={isTranslating}
+						className="text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200"
+					>
+						{isTranslating ?
+							<Loader2 className="animate-spin mr-2 h-4 w-4" />
+						:	<Sparkles className="mr-2 h-4 w-4" />}
+						Auto Translate (ID → EN)
+					</Button>
+				</div>
 			</div>
 
 			<form onSubmit={handleSubmit(onSubmit)} className="space-y-8">

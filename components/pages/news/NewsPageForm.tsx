@@ -243,18 +243,28 @@ export default function NewsPageForm({
 	};
 
 	// --- AUTO TRANSLATE ---
-	const handleAutoTranslate = async () => {
+	const handleAutoTranslate = async (lang: string) => {
 		setIsTranslating(true);
-
-		// Mapping: Kita tambahkan Hero ke dalam mapping
-		const fieldMapping = [
-			{ src: "hero_title", dest: "hero_title_en" },
-			{ src: "hero_desc", dest: "hero_desc_en" },
-			{ src: "news_title", dest: "news_title_en" },
-			{ src: "news_desc", dest: "news_desc_en" },
-			{ src: "csr_title", dest: "csr_title_en" },
-			{ src: "csr_desc", dest: "csr_desc_en" },
-		];
+		let fieldMapping;
+		if (lang == "en") {
+			fieldMapping = [
+				{ src: "hero_title", dest: "hero_title_en" },
+				{ src: "hero_desc", dest: "hero_desc_en" },
+				{ src: "news_title", dest: "news_title_en" },
+				{ src: "news_desc", dest: "news_desc_en" },
+				{ src: "csr_title", dest: "csr_title_en" },
+				{ src: "csr_desc", dest: "csr_desc_en" },
+			];
+		} else {
+			fieldMapping = [
+				{ src: "hero_title_en", dest: "hero_title" },
+				{ src: "hero_desc_en", dest: "hero_desc" },
+				{ src: "news_title_en", dest: "news_title" },
+				{ src: "news_desc_en", dest: "news_desc" },
+				{ src: "csr_title_en", dest: "csr_title" },
+				{ src: "csr_desc_en", dest: "csr_desc" },
+			];
+		}
 
 		const textsToTranslate = fieldMapping.map(
 			(f) => getValues(f.src as any) || "",
@@ -284,7 +294,7 @@ export default function NewsPageForm({
 							"Content-Type": "application/json",
 						},
 						credentials: "include",
-						body: JSON.stringify({ texts: chunkTexts, target_lang: "en" }),
+						body: JSON.stringify({ texts: chunkTexts, target_lang: lang }),
 						cache: "no-store",
 					},
 				);
@@ -363,19 +373,34 @@ export default function NewsPageForm({
 				<h1 className="text-2xl font-bold tracking-tight">
 					{isEditMode ? "Edit News Page" : "Create News Page"}
 				</h1>
-				<Button
-					type="button"
-					variant="secondary"
-					size="sm"
-					onClick={handleAutoTranslate}
-					disabled={isTranslating}
-					className="text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200"
-				>
-					{isTranslating ?
-						<Loader2 className="animate-spin mr-2 h-4 w-4" />
-					:	<Sparkles className="mr-2 h-4 w-4" />}
-					Auto Translate (ID → EN)
-				</Button>
+				<div>
+					<Button
+						type="button"
+						variant="secondary"
+						size="sm"
+						onClick={() => handleAutoTranslate("id")}
+						disabled={isTranslating}
+						className="text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200"
+					>
+						{isTranslating ?
+							<Loader2 className="animate-spin mr-2 h-4 w-4" />
+						:	<Sparkles className="mr-2 h-4 w-4" />}
+						Auto Translate (EN → ID)
+					</Button>
+					<Button
+						type="button"
+						variant="secondary"
+						size="sm"
+						onClick={() => handleAutoTranslate("en")}
+						disabled={isTranslating}
+						className="text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200"
+					>
+						{isTranslating ?
+							<Loader2 className="animate-spin mr-2 h-4 w-4" />
+						:	<Sparkles className="mr-2 h-4 w-4" />}
+						Auto Translate (ID → EN)
+					</Button>
+				</div>
 			</div>
 
 			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

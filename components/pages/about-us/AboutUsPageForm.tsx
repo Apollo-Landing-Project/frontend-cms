@@ -544,27 +544,48 @@ export default function AboutUsForm({
 	};
 
 	// --- AUTO TRANSLATE ---
-	const handleAutoTranslate = async () => {
+	const handleAutoTranslate = async (lang: string) => {
 		setIsTranslating(true);
-
-		const simpleFields = [
-			{ src: "hero_title", dest: "hero_title_en" },
-			{ src: "hero_desc", dest: "hero_desc_en" },
-			{ src: "vision_title", dest: "vision_title_en" },
-			{ src: "vision_desc", dest: "vision_desc_en" },
-			{ src: "vision_quote", dest: "vision_quote_en" },
-			{ src: "mission_title", dest: "mission_title_en" },
-			{ src: "mission_desc", dest: "mission_desc_en" },
-			{ src: "mission_quote", dest: "mission_quote_en" },
-			{ src: "history_title", dest: "history_title_en" },
-			{ src: "history_desc", dest: "history_desc_en" },
-			{ src: "company_structure_title", dest: "company_structure_title_en" },
-			{ src: "company_structure_desc", dest: "company_structure_desc_en" },
-			{ src: "boc_title", dest: "boc_title_en" },
-			{ src: "boc_desc", dest: "boc_desc_en" },
-			{ src: "bod_title", dest: "bod_title_en" },
-			{ src: "bod_desc", dest: "bod_desc_en" },
-		];
+		let simpleFields;
+		if (lang == "en") {
+			simpleFields = [
+				{ src: "hero_title", dest: "hero_title_en" },
+				{ src: "hero_desc", dest: "hero_desc_en" },
+				{ src: "vision_title", dest: "vision_title_en" },
+				{ src: "vision_desc", dest: "vision_desc_en" },
+				{ src: "vision_quote", dest: "vision_quote_en" },
+				{ src: "mission_title", dest: "mission_title_en" },
+				{ src: "mission_desc", dest: "mission_desc_en" },
+				{ src: "mission_quote", dest: "mission_quote_en" },
+				{ src: "history_title", dest: "history_title_en" },
+				{ src: "history_desc", dest: "history_desc_en" },
+				{ src: "company_structure_title", dest: "company_structure_title_en" },
+				{ src: "company_structure_desc", dest: "company_structure_desc_en" },
+				{ src: "boc_title", dest: "boc_title_en" },
+				{ src: "boc_desc", dest: "boc_desc_en" },
+				{ src: "bod_title", dest: "bod_title_en" },
+				{ src: "bod_desc", dest: "bod_desc_en" },
+			];
+		} else {
+			simpleFields = [
+				{ src: "hero_title_en", dest: "hero_title" },
+				{ src: "hero_desc_en", dest: "hero_desc" },
+				{ src: "vision_title_en", dest: "vision_title" },
+				{ src: "vision_desc_en", dest: "vision_desc" },
+				{ src: "vision_quote_en", dest: "vision_quote" },
+				{ src: "mission_title_en", dest: "mission_title" },
+				{ src: "mission_desc_en", dest: "mission_desc" },
+				{ src: "mission_quote_en", dest: "mission_quote" },
+				{ src: "history_title_en", dest: "history_title" },
+				{ src: "history_desc_en", dest: "history_desc" },
+				{ src: "company_structure_title_en", dest: "company_structure_title" },
+				{ src: "company_structure_desc_en", dest: "company_structure_desc" },
+				{ src: "boc_title_en", dest: "boc_title" },
+				{ src: "boc_desc_en", dest: "boc_desc" },
+				{ src: "bod_title_en", dest: "bod_title" },
+				{ src: "bod_desc_en", dest: "bod_desc" },
+			];
+		}
 
 		// Helper to get text from dynamic arrays
 		const getListText = (key: string) => {
@@ -595,7 +616,7 @@ export default function AboutUsForm({
 						method: "POST",
 						headers: { "Content-Type": "application/json" },
 						credentials: "include",
-						body: JSON.stringify({ texts: chunk, target_lang: "en" }),
+						body: JSON.stringify({ texts: chunk, target_lang: lang }),
 					},
 				);
 				const json = await res.json();
@@ -626,7 +647,7 @@ export default function AboutUsForm({
 				);
 
 			toast.success("Translation complete!");
-		} catch (e) {
+		} catch {
 			toast.error("Translation failed");
 		} finally {
 			setIsTranslating(false);
@@ -718,17 +739,34 @@ export default function AboutUsForm({
 				<h1 className="text-2xl font-bold tracking-tight text-slate-900">
 					{isEditMode ? "Edit About Us Page" : "Setup About Us Page"}
 				</h1>
-				<Button
-					variant="secondary"
-					onClick={handleAutoTranslate}
-					disabled={isTranslating}
-					className="text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200"
-				>
-					{isTranslating ?
-						<Loader2 className="animate-spin mr-2 h-4 w-4" />
-					:	<Sparkles className="mr-2 h-4 w-4" />}
-					Auto Translate (ID → EN)
-				</Button>
+				<div>
+					<Button
+						type="button"
+						variant="secondary"
+						size="sm"
+						onClick={() => handleAutoTranslate("id")}
+						disabled={isTranslating}
+						className="text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200"
+					>
+						{isTranslating ?
+							<Loader2 className="animate-spin mr-2 h-4 w-4" />
+						:	<Sparkles className="mr-2 h-4 w-4" />}
+						Auto Translate (EN → ID)
+					</Button>
+					<Button
+						type="button"
+						variant="secondary"
+						size="sm"
+						onClick={() => handleAutoTranslate("en")}
+						disabled={isTranslating}
+						className="text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200"
+					>
+						{isTranslating ?
+							<Loader2 className="animate-spin mr-2 h-4 w-4" />
+						:	<Sparkles className="mr-2 h-4 w-4" />}
+						Auto Translate (ID → EN)
+					</Button>
+				</div>
 			</div>
 
 			<form onSubmit={handleSubmit(onSubmit)} className="space-y-8">

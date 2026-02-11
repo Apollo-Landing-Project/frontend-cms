@@ -98,7 +98,7 @@ const data = {
 	projects: [
 		{
 			name: "Dashboard Utama",
-			url: "/admin/beranda",
+			url: "/admin",
 			icon: LayoutDashboard,
 		},
 		{
