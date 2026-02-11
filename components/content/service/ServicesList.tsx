@@ -17,7 +17,7 @@ import {
 	sortableKeyboardCoordinates,
 	rectSortingStrategy,
 } from "@dnd-kit/sortable";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { Plus, Loader2, ArrowLeft } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -158,8 +158,6 @@ export default function ServiceItemList() {
 
 	return (
 		<div className="p-6 md:p-10 max-w-7xl mx-auto pb-20">
-			<Toaster position="top-right" />
-
 			{/* HEADER */}
 			<div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b pb-6 mb-8">
 				<div>

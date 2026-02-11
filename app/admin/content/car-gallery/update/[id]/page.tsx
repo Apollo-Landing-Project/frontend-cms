@@ -1,5 +1,7 @@
+"use client";
 import { AppSidebar } from "@/components/app-sidebar";
-import ServiceItemList from "@/components/content/service/ServicesList";
+import UpdateCarGallery from "@/components/content/car-gallery/CarGalleryUpdate";
+import UpdateServiceItem from "@/components/content/service/ServiceItemUpdate";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -15,7 +17,12 @@ import {
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
 
-const page = () => {
+export default async function page({
+	params,
+}: {
+	params: Promise<{ id: string }>;
+}) {
+	const { id } = await params;
 	return (
 		<SidebarProvider>
 			<AppSidebar />
@@ -33,19 +40,23 @@ const page = () => {
 									<BreadcrumbLink href="/admin">Beranda</BreadcrumbLink>
 								</BreadcrumbItem>
 								<BreadcrumbSeparator className="hidden md:block" />
+								<BreadcrumbItem className="hidden md:block">
+									<BreadcrumbLink href="/admin/content/car-gallery">
+										Car Gallery
+									</BreadcrumbLink>
+								</BreadcrumbItem>
+								<BreadcrumbSeparator className="hidden md:block" />
 								<BreadcrumbItem>
-									<BreadcrumbPage>Service Items</BreadcrumbPage>
+									<BreadcrumbPage>Update Car Gallery</BreadcrumbPage>
 								</BreadcrumbItem>
 							</BreadcrumbList>
 						</Breadcrumb>
 					</div>
 				</header>
 				<div className="">
-					<ServiceItemList />
+					<UpdateCarGallery id={id} />
 				</div>
 			</SidebarInset>
 		</SidebarProvider>
 	);
-};
-
-export default page;
+}

@@ -34,13 +34,13 @@ const page = () => {
 								</BreadcrumbItem>
 								<BreadcrumbSeparator className="hidden md:block" />
 								<BreadcrumbItem className="hidden md:block">
-									<BreadcrumbLink href="/admin/pages/news">
-										News Pages
+									<BreadcrumbLink href="/admin/pages/service">
+										Service Pages
 									</BreadcrumbLink>
 								</BreadcrumbItem>
 								<BreadcrumbSeparator className="hidden md:block" />
 								<BreadcrumbItem>
-									<BreadcrumbPage>Create News Page</BreadcrumbPage>
+									<BreadcrumbPage>Create Service Page</BreadcrumbPage>
 								</BreadcrumbItem>
 							</BreadcrumbList>
 						</Breadcrumb>

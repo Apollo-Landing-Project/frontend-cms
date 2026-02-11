@@ -1,5 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar";
-import ServiceItemList from "@/components/content/service/ServicesList";
+import CarGalleryForm from "@/components/content/car-gallery/CarGalleryForm";
+import ServiceItemForm from "@/components/content/service/ServiceItemForm";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -33,15 +34,21 @@ const page = () => {
 									<BreadcrumbLink href="/admin">Beranda</BreadcrumbLink>
 								</BreadcrumbItem>
 								<BreadcrumbSeparator className="hidden md:block" />
+								<BreadcrumbItem className="hidden md:block">
+									<BreadcrumbLink href="/admin/content/car-gallery">
+										Car Gallery
+									</BreadcrumbLink>
+								</BreadcrumbItem>
+								<BreadcrumbSeparator className="hidden md:block" />
 								<BreadcrumbItem>
-									<BreadcrumbPage>Service Items</BreadcrumbPage>
+									<BreadcrumbPage>Create Car Gallery</BreadcrumbPage>
 								</BreadcrumbItem>
 							</BreadcrumbList>
 						</Breadcrumb>
 					</div>
 				</header>
 				<div className="">
-					<ServiceItemList />
+					<CarGalleryForm isEditMode={false} />
 				</div>
 			</SidebarInset>
 		</SidebarProvider>

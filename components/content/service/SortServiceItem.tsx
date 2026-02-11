@@ -123,7 +123,7 @@ export function SortableServiceItem({
 					</div>
 
 					<div className="flex gap-1">
-						<Link href={`/admin/services/items/${item.id}`}>
+						<Link href={`/admin/content/services-items/update/${item.id}`}>
 							<Button
 								variant="ghost"
 								size="icon"

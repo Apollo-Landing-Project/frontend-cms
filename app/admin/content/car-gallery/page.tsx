@@ -1,4 +1,5 @@
 import { AppSidebar } from "@/components/app-sidebar";
+import CarGalleryList from "@/components/content/car-gallery/CarGalleryList";
 import ServiceItemList from "@/components/content/service/ServicesList";
 import {
 	Breadcrumb,
@@ -34,14 +35,14 @@ const page = () => {
 								</BreadcrumbItem>
 								<BreadcrumbSeparator className="hidden md:block" />
 								<BreadcrumbItem>
-									<BreadcrumbPage>Service Items</BreadcrumbPage>
+									<BreadcrumbPage>Car Gallery</BreadcrumbPage>
 								</BreadcrumbItem>
 							</BreadcrumbList>
 						</Breadcrumb>
 					</div>
 				</header>
 				<div className="">
-					<ServiceItemList />
+					<CarGalleryList />
 				</div>
 			</SidebarInset>
 		</SidebarProvider>

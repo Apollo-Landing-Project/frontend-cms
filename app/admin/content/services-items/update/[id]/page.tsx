@@ -40,8 +40,8 @@ export default async function page({
 								</BreadcrumbItem>
 								<BreadcrumbSeparator className="hidden md:block" />
 								<BreadcrumbItem className="hidden md:block">
-									<BreadcrumbLink href="/admin/pages/about-us">
-										About Us Pages
+									<BreadcrumbLink href="/admin/content/services-items">
+										Service Items
 									</BreadcrumbLink>
 								</BreadcrumbItem>
 								<BreadcrumbSeparator className="hidden md:block" />

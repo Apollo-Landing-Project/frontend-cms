@@ -36,7 +36,7 @@ const page = () => {
 								</BreadcrumbItem>
 								<BreadcrumbSeparator className="hidden md:block" />
 								<BreadcrumbItem>
-									<BreadcrumbPage>News Pages</BreadcrumbPage>
+									<BreadcrumbPage>Service Pages</BreadcrumbPage>
 								</BreadcrumbItem>
 							</BreadcrumbList>
 						</Breadcrumb>

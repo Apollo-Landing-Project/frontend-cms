@@ -59,7 +59,7 @@ const data = {
 					icon: Car,
 				},
 				{
-					title: "Car Items",
+					title: "Car Gallery",
 					url: "/admin/content/car-gallery",
 					icon: BookPlus,
 				},
