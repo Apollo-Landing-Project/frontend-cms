@@ -3,7 +3,15 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Edit, Trash2, Plus, ImageIcon, Globe, FileText } from "lucide-react";
+import {
+	Edit,
+	Trash2,
+	Plus,
+	ImageIcon,
+	Globe,
+	FileText,
+	Info,
+} from "lucide-react";
 import toast from "react-hot-toast";
 
 import { Button } from "@/components/ui/button";
@@ -13,7 +21,7 @@ import { Switch } from "@/components/ui/switch";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
-export default function NewsPageList() {
+export default function AboutUsPageList() {
 	const [data, setData] = useState<any[]>([]);
 	const [loading, setLoading] = useState(true);
 	const router = useRouter();
@@ -21,18 +29,22 @@ export default function NewsPageList() {
 	// --- FETCH DATA ---
 	const fetchData = async () => {
 		try {
-			const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/page/news`, {
-				credentials: "include",
-			});
+			const res = await fetch(
+				`${process.env.NEXT_PUBLIC_API_URL}/page/about-us`,
+				{
+					credentials: "include",
+				},
+			);
 			const json = await res.json();
-			if (res.ok) {
-				toast.success(json.message);
-				setData(json.data || json);
-			} else {
-				toast.error(json.message);
-			}
+
+			// Handle response: bisa array (list) atau object (single/first)
+			// Sesuai controller getAll yang pakai findMany, harusnya array.
+			const resultData = json.data || json;
+			setData(
+				Array.isArray(resultData) ? resultData : [resultData].filter(Boolean),
+			);
 		} catch {
-			toast.error("Gagal mengambil data news");
+			toast.error("Gagal mengambil data about us");
 		} finally {
 			setLoading(false);
 		}
@@ -44,30 +56,28 @@ export default function NewsPageList() {
 
 	// --- TOGGLE ACTIVE ---
 	const handleToggleActive = async (id: string, currentState: boolean) => {
-		if (currentState) return; // Sudah aktif, tidak perlu action
+		if (currentState) return; // Sudah aktif
 
-		// 1. Optimistic UI Update (Ubah UI duluan biar terasa cepat)
+		// Optimistic UI
 		const oldData = [...data];
 		setData((prev) =>
 			prev.map((item) => ({
 				...item,
-				isActive: item.id === id, // Set true yg dipilih, false sisanya
+				isActive: item.id === id,
 			})),
 		);
 
 		try {
-			// 2. Request ke Server
 			const res = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/page/news/${id}/active`,
+				`${process.env.NEXT_PUBLIC_API_URL}/page/about-us/${id}/active`,
 				{ method: "PATCH", credentials: "include" },
 			);
 
 			if (!res.ok) throw new Error();
 
-			toast.success("News Page activated!");
-			fetchData(); // Refresh untuk memastikan data sinkron
+			toast.success("Halaman diaktifkan!");
+			fetchData();
 		} catch {
-			// 3. Rollback jika gagal
 			setData(oldData);
 			toast.error("Gagal mengubah status");
 		}
@@ -76,13 +86,15 @@ export default function NewsPageList() {
 	// --- DELETE ---
 	const handleDelete = async (id: string) => {
 		if (
-			!confirm("Yakin ingin menghapus? Data dan gambar akan hilang permanen.")
+			!confirm(
+				"Yakin ingin menghapus? Data, gambar, dan list governance akan hilang permanen.",
+			)
 		)
 			return;
 
 		try {
 			const res = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/page/news/${id}`,
+				`${process.env.NEXT_PUBLIC_API_URL}/page/about-us/${id}`,
 				{ method: "DELETE", credentials: "include" },
 			);
 
@@ -101,48 +113,45 @@ export default function NewsPageList() {
 			<div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b pb-6">
 				<div>
 					<h1 className="text-3xl font-bold tracking-tight text-slate-900">
-						News & CSR Pages
+						About Us Pages
 					</h1>
 					<p className="text-slate-500 mt-1">
-						Kelola konten halaman Berita dan CSR (Corporate Social
-						Responsibility).
+						Kelola versi halaman {`"`}Tentang Kami{`"`} (Visi, Misi, Sejarah,
+						Struktur, dll).
 					</p>
 				</div>
-				<Link href="/admin/pages/news/create">
+				<Link href="/admin/pages/about-us/create">
 					<Button className="gap-2 shadow-lg shadow-blue-500/20">
-						<Plus size={18} /> Create New Page
+						<Plus size={18} /> Create New Version
 					</Button>
 				</Link>
 			</div>
 
 			{/* CONTENT GRID */}
 			{loading ?
-				// Loading Skeleton
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 					{[1, 2, 3].map((i) => (
 						<div
 							key={i}
-							className="h-[320px] bg-slate-100 rounded-xl animate-pulse"
+							className="h-80 bg-slate-100 rounded-xl animate-pulse"
 						/>
 					))}
 				</div>
 			: data.length === 0 ?
-				// Empty State
 				<div className="text-center py-20 bg-slate-50 rounded-2xl border border-dashed border-slate-300">
 					<div className="bg-white p-4 rounded-full inline-block shadow-sm mb-4">
-						<FileText className="h-8 w-8 text-slate-400" />
+						<Info className="h-8 w-8 text-slate-400" />
 					</div>
 					<h3 className="text-lg font-semibold text-slate-900">
-						Belum ada News Page
+						Belum ada Halaman About Us
 					</h3>
 					<p className="text-slate-500 mb-6 max-w-sm mx-auto">
-						Buat halaman berita pertama Anda untuk ditampilkan di website.
+						Buat halaman pertama untuk menampilkan profil perusahaan.
 					</p>
-					<Link href="/admin/pages/news/create">
+					<Link href="/admin/pages/about-us/create">
 						<Button variant="outline">Buat Sekarang</Button>
 					</Link>
 				</div>
-				// Data Grid
 			:	<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 					{data.map((item) => (
 						<Card
@@ -154,7 +163,7 @@ export default function NewsPageList() {
 								:	"",
 							)}
 						>
-							{/* IMAGE PREVIEW */}
+							{/* IMAGE PREVIEW (HERO BG) */}
 							<div className="relative aspect-video bg-slate-100 overflow-hidden border-b">
 								{item.hero_bg ?
 									<Image
@@ -179,7 +188,7 @@ export default function NewsPageList() {
 											variant="secondary"
 											className="bg-white/90 backdrop-blur text-slate-600 shadow-sm"
 										>
-											Draft
+											Draft / Inactive
 										</Badge>
 									}
 								</div>
@@ -189,13 +198,13 @@ export default function NewsPageList() {
 							<CardContent className="p-5 flex-1">
 								<div className="space-y-3">
 									<div>
-										{/* Menggunakan Hero Title sebagai Judul Utama Card */}
+										{/* Mengambil Title dari Relation ID */}
 										<h3 className="font-bold text-lg text-slate-900 line-clamp-1">
-											{item.newsPageId?.hero_title || "Untitled News Page"}
+											{item.aboutUsPageId?.hero_title || "Untitled Page"}
 										</h3>
-										{/* Deskripsi singkat */}
 										<p className="text-sm text-slate-500 line-clamp-2 mt-1">
-											{item.newsPageId?.hero_desc || "No description provided."}
+											{item.aboutUsPageId?.hero_desc ||
+												"No description provided."}
 										</p>
 									</div>
 
@@ -204,12 +213,15 @@ export default function NewsPageList() {
 											className="flex items-center gap-1"
 											title="Includes ID & EN Content"
 										>
-											<Globe size={12} /> Dual Language
+											<Globe size={12} /> ID & EN
 										</div>
-										{/* Menampilkan Judul News ID jika ada */}
-										{item.newsPageId?.news_title && (
-											<div className="flex items-center gap-1 line-clamp-1 max-w-[150px]">
-												<FileText size={12} /> {item.newsPageId.news_title}
+										{/* Info tambahan: Jumlah Item Governance/Structure jika sudah di-fetch */}
+										{(item.governances?.length > 0 ||
+											item.companyStructures?.length > 0) && (
+											<div className="flex items-center gap-1">
+												<FileText size={12} />
+												{item.governances?.length || 0} People •{" "}
+												{item.companyStructures?.length || 0} Units
 											</div>
 										)}
 									</div>
@@ -224,7 +236,7 @@ export default function NewsPageList() {
 										onCheckedChange={() =>
 											handleToggleActive(item.id, item.isActive)
 										}
-										disabled={item.isActive} // Disable jika sudah aktif
+										disabled={item.isActive}
 										id={`active-${item.id}`}
 									/>
 									<label
@@ -244,7 +256,7 @@ export default function NewsPageList() {
 										size="icon"
 										className="h-8 w-8 text-slate-500 hover:text-blue-600 hover:bg-blue-50"
 										onClick={() =>
-											router.push(`/admin/pages/news/update/${item.id}`)
+											router.push(`/admin/pages/about-us/update/${item.id}`)
 										}
 										title="Edit Page"
 									>

@@ -23,6 +23,7 @@ import {
 	FileText,
 	Settings,
 	Send,
+	BookPlus,
 } from "lucide-react";
 
 const data = {
@@ -36,8 +37,8 @@ const data = {
 			icon: Info,
 			items: [
 				{ title: "Home", url: "/admin/pages/home" },
-				{ title: "About Us", url: "/admin/pages/about" },
-				{ title: "Our Service", url: "/admin/pages/services" },
+				{ title: "About Us", url: "/admin/pages/about-us" },
+				{ title: "Our Service", url: "/admin/pages/service" },
 				{ title: "News", url: "/admin/pages/news" },
 				{ title: "Investor", url: "/admin/pages/investor" },
 				{ title: "Footer", url: "/admin/pages/footer" },
@@ -53,9 +54,14 @@ const data = {
 			icon: FileText,
 			items: [
 				{
-					title: "Service",
-					url: "/admin/content/service",
+					title: "Services Items",
+					url: "/admin/content/services-items",
 					icon: Car,
+				},
+				{
+					title: "Car Items",
+					url: "/admin/content/car-gallery",
+					icon: BookPlus,
 				},
 				{
 					title: "News (Artikel)",
