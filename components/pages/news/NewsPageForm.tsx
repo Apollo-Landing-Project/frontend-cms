@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useForm, UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import Cropper from "react-easy-crop";
 import type { Area } from "react-easy-crop";
 import {
@@ -17,7 +17,6 @@ import {
 	LayoutTemplate,
 	FileText,
 	Briefcase,
-	Crop as CropIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getCroppedImg } from "@/utils/canvasUtils";
@@ -100,7 +99,7 @@ const FormInput = ({
 				{...register(id)}
 				placeholder={placeholder}
 				className={cn(
-					"resize-none min-h-[100px] bg-slate-50 focus:bg-white transition-colors text-sm",
+					"resize-none min-h-25 bg-slate-50 focus:bg-white transition-colors text-sm",
 					error && "border-red-500 focus-visible:ring-red-500",
 				)}
 			/>
@@ -363,7 +362,7 @@ export default function NewsPageForm({
 
 			toast.success(isEditMode ? "News Page Updated!" : "News Page Created!");
 			setTimeout(() => {
-				router.push("/admin/pages/home");
+				router.push("/admin/pages/news");
 			}, 500);
 		} catch (e: any) {
 			toast.error(e.message || "Failed to submit");
@@ -597,7 +596,7 @@ export default function NewsPageForm({
 						type="submit"
 						size="lg"
 						disabled={isLoading}
-						className="min-w-[200px]"
+						className="min-w-50"
 					>
 						{isLoading ?
 							<Loader2 className="animate-spin mr-2" />
@@ -613,7 +612,7 @@ export default function NewsPageForm({
 					<DialogHeader className="p-4 border-b bg-white">
 						<DialogTitle>Crop Image (16:9)</DialogTitle>
 					</DialogHeader>
-					<div className="h-[400px] relative bg-slate-950">
+					<div className="h-100 relative bg-slate-950">
 						{cropImageSrc && (
 							<Cropper
 								image={cropImageSrc}

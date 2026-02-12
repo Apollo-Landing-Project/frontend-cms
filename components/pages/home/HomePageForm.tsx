@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useForm, UseFormRegister } from "react-hook-form";
+import { useForm, useFieldArray, UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import toast from "react-hot-toast";
@@ -9,6 +9,7 @@ import Cropper from "react-easy-crop";
 import type { Area } from "react-easy-crop";
 import {
 	Loader2,
+	Plus,
 	UploadCloud,
 	X,
 	Sparkles,
@@ -91,8 +92,8 @@ const baseSchema = z.object({
 	about_us_products: z.coerce.number().min(0),
 	about_us_countries: z.coerce.number().min(0),
 	about_us_brands: z.coerce.number().min(0),
-	contact_email: z.string().min(1, "Email is required"),
-	contact_phone: z.string().min(1, "Phone is required"),
+	contact_email: z.array(z.object({ value: z.string().email("Invalid email") })),
+	contact_phone: z.array(z.object({ value: z.string().min(1, "Required") })),
 	contact_link_map: z.string().url().or(z.literal("")),
 	contact_address: z.string().min(1, "Address is required"),
 
@@ -165,7 +166,7 @@ const FormInput = ({
 					error && "border-red-500 focus-visible:ring-red-500",
 				)}
 			/>
-		:	<Input
+			: <Input
 				id={id}
 				type={type}
 				{...register(id)}
@@ -239,8 +240,8 @@ export default function HomePageForm({
 			about_us_products: 0,
 			about_us_countries: 0,
 			about_us_brands: 0,
-			contact_email: "",
-			contact_phone: "",
+			contact_email: [{ value: "" }],
+			contact_phone: [{ value: "" }],
 			contact_link_map: "",
 			contact_address: "",
 			hero_title: "",
@@ -271,6 +272,18 @@ export default function HomePageForm({
 	});
 	const router = useRouter();
 
+	// Field Arrays (Dynamic Inputs)
+	const {
+		fields: phoneFields,
+		append: appendPhone,
+		remove: removePhone,
+	} = useFieldArray({ control: form.control, name: "contact_phone" });
+	const {
+		fields: emailFields,
+		append: appendEmail,
+		remove: removeEmail,
+	} = useFieldArray({ control: form.control, name: "contact_email" });
+
 	// --- PREFILL DATA ---
 	useEffect(() => {
 		if (isEditMode && initialData) {
@@ -293,15 +306,15 @@ export default function HomePageForm({
 				contact_link_map: initialData.contact_link_map || "",
 				contact_address: initialData.contact_address || "",
 
-				// Arrays to String
+				// Arrays to Object Arrays for useFieldArray
 				contact_email:
-					Array.isArray(initialData.contact_email) ?
-						initialData.contact_email.join(", ")
-					:	"",
+					Array.isArray(initialData.contact_email) && initialData.contact_email.length ?
+						initialData.contact_email.map((s: string) => ({ value: s }))
+						: [{ value: "" }],
 				contact_phone:
-					Array.isArray(initialData.contact_phone) ?
-						initialData.contact_phone.join(", ")
-					:	"",
+					Array.isArray(initialData.contact_phone) && initialData.contact_phone.length ?
+						initialData.contact_phone.map((s: string) => ({ value: s }))
+						: [{ value: "" }],
 
 				// ID Content
 				hero_title: initialData.homePageId?.hero_title || "",
@@ -503,23 +516,22 @@ export default function HomePageForm({
 		formData.append("image_status", JSON.stringify(imageStatus));
 		formData.append("prefix", "homepage");
 
+		// Transform contact arrays: [{value: "a"}] -> ["a"]
+		const emailArr = data.contact_email.map((e) => e.value).filter((v) => v !== "");
+		const phoneArr = data.contact_phone.map((p) => p.value).filter((v) => v !== "");
+		emailArr.forEach((val) => formData.append("contact_email", val));
+		phoneArr.forEach((val) => formData.append("contact_phone", val));
+
 		Object.entries(data).forEach(([key, value]) => {
-			if (
-				(key === "contact_email" || key === "contact_phone") &&
-				typeof value === "string"
-			) {
-				const arr = value.split(",").map((s) => s.trim());
-				arr.forEach((val) => formData.append(key, val));
-			} else {
-				formData.append(key, String(value));
-			}
+			if (key === "contact_email" || key === "contact_phone") return; // already handled
+			formData.append(key, String(value));
 		});
 
 		// Handle URL based on mode
 		const url =
 			isEditMode && initialData?.id ?
 				`${process.env.NEXT_PUBLIC_API_URL}/page/home/${initialData.id}`
-			:	`${process.env.NEXT_PUBLIC_API_URL}/page/home`;
+				: `${process.env.NEXT_PUBLIC_API_URL}/page/home`;
 		const method = isEditMode ? "PUT" : "POST";
 
 		try {
@@ -572,7 +584,7 @@ export default function HomePageForm({
 					>
 						{isTranslating ?
 							<Loader2 className="animate-spin mr-2 h-4 w-4" />
-						:	<Sparkles className="mr-2 h-4 w-4" />}
+							: <Sparkles className="mr-2 h-4 w-4" />}
 						Auto Translate (EN → ID)
 					</Button>
 					<Button
@@ -585,7 +597,7 @@ export default function HomePageForm({
 					>
 						{isTranslating ?
 							<Loader2 className="animate-spin mr-2 h-4 w-4" />
-						:	<Sparkles className="mr-2 h-4 w-4" />}
+							: <Sparkles className="mr-2 h-4 w-4" />}
 						Auto Translate (ID → EN)
 					</Button>
 				</div>
@@ -634,7 +646,7 @@ export default function HomePageForm({
 													src={
 														slots[idx]?.type === "file" ?
 															(slots[idx] as any).preview
-														:	(slots[idx] as any).url
+															: (slots[idx] as any).url
 													}
 													alt={`slot-${idx}`}
 													className="w-full h-full object-cover transition-transform group-hover:scale-105"
@@ -651,7 +663,7 @@ export default function HomePageForm({
 													</label>
 												</div>
 											</>
-										:	<label className="cursor-pointer flex flex-col items-center p-4 w-full h-full justify-center hover:bg-slate-50/50 transition-colors">
+											: <label className="cursor-pointer flex flex-col items-center p-4 w-full h-full justify-center hover:bg-slate-50/50 transition-colors">
 												<div className="bg-slate-100 p-3 rounded-full mb-3 group-hover:bg-blue-50">
 													<UploadCloud className="text-slate-400 h-6 w-6 group-hover:text-blue-500" />
 												</div>
@@ -728,20 +740,94 @@ export default function HomePageForm({
 								</CardTitle>
 							</CardHeader>
 							<CardContent className="p-4 space-y-4">
-								<FormInput
-									id="contact_email"
-									label="Emails (comma separated)"
-									placeholder="email@web.com, ..."
-									register={form.register}
-									error={errors.contact_email}
-								/>
-								<FormInput
-									id="contact_phone"
-									label="Phones (comma separated)"
-									placeholder="0812..., 021..."
-									register={form.register}
-									error={errors.contact_phone}
-								/>
+								{/* Dynamic Phone Inputs */}
+								<div className="space-y-1.5">
+									<Label className="text-xs font-semibold text-slate-500 uppercase tracking-wide flex items-center gap-1">
+										<Phone className="w-3 h-3" /> Phone Numbers
+									</Label>
+									<div className="space-y-2">
+										{phoneFields.map((f, i) => (
+											<div key={f.id} className="flex gap-2">
+												<div className="w-full">
+													<Input
+														{...form.register(`contact_phone.${i}.value`)}
+														placeholder="+62..."
+														className={cn(
+															"bg-slate-50 focus:bg-white transition-colors h-9 text-sm",
+															errors.contact_phone?.[i]?.value && "border-red-500",
+														)}
+													/>
+													{errors.contact_phone?.[i]?.value && (
+														<p className="text-[10px] text-red-500 mt-1">Required</p>
+													)}
+												</div>
+												<Button
+													type="button"
+													variant="ghost"
+													size="icon"
+													onClick={() => removePhone(i)}
+													className="text-red-500 hover:bg-red-50"
+												>
+													<X size={16} />
+												</Button>
+											</div>
+										))}
+										<Button
+											type="button"
+											variant="outline"
+											size="sm"
+											onClick={() => appendPhone({ value: "" })}
+											className="w-full h-8 text-xs border-dashed border-slate-300 hover:border-slate-400 text-slate-500"
+										>
+											<Plus size={14} className="mr-1" /> Add Phone
+										</Button>
+									</div>
+								</div>
+
+								{/* Dynamic Email Inputs */}
+								<div className="space-y-1.5">
+									<Label className="text-xs font-semibold text-slate-500 uppercase tracking-wide flex items-center gap-1">
+										<Mail className="w-3 h-3" /> Emails
+									</Label>
+									<div className="space-y-2">
+										{emailFields.map((f, i) => (
+											<div key={f.id} className="flex gap-2">
+												<div className="w-full">
+													<Input
+														{...form.register(`contact_email.${i}.value`)}
+														placeholder="sales@example.com"
+														className={cn(
+															"bg-slate-50 focus:bg-white transition-colors h-9 text-sm",
+															errors.contact_email?.[i]?.value && "border-red-500",
+														)}
+													/>
+													{errors.contact_email?.[i]?.value && (
+														<p className="text-[10px] text-red-500 mt-1">Invalid Email</p>
+													)}
+												</div>
+												<Button
+													type="button"
+													variant="ghost"
+													size="icon"
+													onClick={() => removeEmail(i)}
+													className="text-red-500 hover:bg-red-50"
+												>
+													<X size={16} />
+												</Button>
+											</div>
+										))}
+										<Button
+											type="button"
+											variant="outline"
+											size="sm"
+											onClick={() => appendEmail({ value: "" })}
+											className="w-full h-8 text-xs border-dashed border-slate-300 hover:border-slate-400 text-slate-500"
+										>
+											<Plus size={14} className="mr-1" /> Add Email
+										</Button>
+									</div>
+								</div>
+
 								<FormInput
 									id="contact_link_map"
 									label="Google Map Link"
@@ -1006,7 +1092,7 @@ export default function HomePageForm({
 					>
 						{isLoading ?
 							<Loader2 className="animate-spin mr-2" />
-						:	null}
+							: null}
 						{isEditMode ? "Save Changes" : "Create Home Page"}
 					</Button>
 				</div>
