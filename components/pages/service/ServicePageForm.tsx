@@ -362,10 +362,9 @@ export default function ServicePageForm({
 				isEditMode ? "Service Page Updated!" : "Service Page Created!",
 			);
 
-			// Optional: Redirect or Refresh
-			if (!isEditMode) {
-				router.refresh();
-			}
+			setTimeout(() => {
+				router.push("/admin/pages/service");
+			}, 500);
 		} catch (e: any) {
 			toast.error(e.message || "Failed to submit");
 		} finally {

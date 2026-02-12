@@ -45,6 +45,7 @@ import {
 	DialogTitle,
 } from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
+import { useRouter } from "next/navigation";
 
 // --- 1. SCHEMA VALIDATION ---
 // Hero Title/Desc sekarang ada versi ID dan EN
@@ -151,6 +152,7 @@ export default function NewsPageForm({
 }: NewsPageFormProps) {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isTranslating, setIsTranslating] = useState(false);
+	const router = useRouter();
 
 	// --- IMAGE & CROPPER STATE ---
 	const [imageFile, setImageFile] = useState<File | null>(null);
@@ -360,6 +362,9 @@ export default function NewsPageForm({
 			if (!res.ok) throw new Error(result.message);
 
 			toast.success(isEditMode ? "News Page Updated!" : "News Page Created!");
+			setTimeout(() => {
+				router.push("/admin/pages/home");
+			}, 500);
 		} catch (e: any) {
 			toast.error(e.message || "Failed to submit");
 		} finally {

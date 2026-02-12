@@ -17,7 +17,17 @@ const nextConfig: NextConfig = {
 			},
 			{
 				protocol: "https",
+				hostname: "api.apolloglobalinteractive.com",
+				pathname: "/**",
+			},
+			{
+				protocol: "https",
 				hostname: "evaluasipembelajaran.site",
+				pathname: "/**",
+			},
+			{
+				protocol: "https",
+				hostname: "apolloglobalinteractive.com",
 				pathname: "/**",
 			},
 		],

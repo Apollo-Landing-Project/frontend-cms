@@ -12,9 +12,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import toast from "react-hot-toast";
 import Image from "next/image";
-import Cropper from "react-easy-crop"; // Install: npm install react-easy-crop
+import Cropper from "react-easy-crop";
 import type { Area } from "react-easy-crop";
-import { getCroppedImg } from "@/utils/canvasUtils"; // Pastikan util ini ada
+import { getCroppedImg } from "@/utils/canvasUtils";
 
 import {
 	Loader2,
@@ -62,10 +62,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-
-// ==========================================
-// 1. ZOD SCHEMA (Updated for Lists)
-// ==========================================
+import { useRouter } from "next/navigation";
 
 const governanceItemSchema = z.object({
 	id: z.string().optional(),
@@ -73,7 +70,7 @@ const governanceItemSchema = z.object({
 	position: z.enum(["BOD", "BOC"]),
 	position_desc: z.string().min(1, "Position desc required"),
 	photo_image: z.string().optional().nullable(),
-	// Index pointer for file array
+
 	photo_index: z.number().optional(),
 });
 
@@ -84,25 +81,23 @@ const structureItemSchema = z.object({
 	icon_index: z.number().optional(),
 });
 
-// Schema helper for dynamic string list
 const stringListSchema = z.array(
 	z.object({ text: z.string().min(1, "Point cannot be empty") }),
 );
 
 const formSchema = z.object({
-	// ID
 	hero_title: z.string().min(1, "Required"),
 	hero_desc: z.string().min(1, "Required"),
 
 	vision_title: z.string().min(1, "Required"),
 	vision_desc: z.string().min(1, "Required"),
 	vision_quote: z.string().optional(),
-	vision_list: stringListSchema, // Changed to array object
+	vision_list: stringListSchema,
 
 	mission_title: z.string().min(1, "Required"),
 	mission_desc: z.string().min(1, "Required"),
 	mission_quote: z.string().optional(),
-	mission_list: stringListSchema, // Changed to array object
+	mission_list: stringListSchema,
 
 	history_title: z.string().min(1, "Required"),
 	history_desc: z.string().min(1, "Required"),
@@ -114,7 +109,6 @@ const formSchema = z.object({
 	bod_title: z.string().min(1, "Required"),
 	bod_desc: z.string().min(1, "Required"),
 
-	// EN
 	hero_title_en: z.string().min(1, "Required"),
 	hero_desc_en: z.string().min(1, "Required"),
 
@@ -138,24 +132,18 @@ const formSchema = z.object({
 	bod_title_en: z.string().min(1, "Required"),
 	bod_desc_en: z.string().min(1, "Required"),
 
-	// Complex Lists
 	governance_list: z.array(governanceItemSchema),
 	company_structure_list: z.array(structureItemSchema),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
-// ==========================================
-// 2. HELPER COMPONENTS
-// ==========================================
-
-// --- IMAGE UPLOAD FIELD (Updated with Ratio Class) ---
 interface ImageUploadFieldProps {
 	label: string;
 	preview: string | null;
 	onFileSelect: (file: File) => void;
 	isNew?: boolean;
-	aspectClass?: string; // e.g., "aspect-square" or "aspect-[2/3]"
+	aspectClass?: string;
 	note?: string;
 }
 
@@ -226,7 +214,6 @@ const ImageUploadField = ({
 	);
 };
 
-// --- DYNAMIC LIST FIELD (Vision/Mission Points) ---
 const DynamicListField = ({
 	control,
 	name,
@@ -288,7 +275,6 @@ const DynamicListField = ({
 	);
 };
 
-// --- FORM INPUT HELPER ---
 const FormInput = ({
 	id,
 	label,
@@ -331,10 +317,6 @@ const FormInput = ({
 	</div>
 );
 
-// ==========================================
-// 3. MAIN FORM COMPONENT
-// ==========================================
-
 interface AboutUsFormProps {
 	initialData?: any;
 	isEditMode?: boolean;
@@ -346,8 +328,8 @@ export default function AboutUsForm({
 }: AboutUsFormProps) {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isTranslating, setIsTranslating] = useState(false);
+	const router = useRouter();
 
-	// --- IMAGE STATE ---
 	const [globalFiles, setGlobalFiles] = useState<{
 		[key: string]: File | null;
 	}>({});
@@ -362,11 +344,10 @@ export default function AboutUsForm({
 		[key: string]: string | null;
 	}>({});
 
-	// --- CROPPER STATE ---
 	const [cropState, setCropState] = useState<{
 		isOpen: boolean;
 		imageSrc: string | null;
-		targetKey: string; // "hero_bg" or "governance_list-0"
+		targetKey: string;
 		targetType: "global" | "list";
 		aspectRatio: number;
 	}>({
@@ -380,7 +361,6 @@ export default function AboutUsForm({
 	const [zoom, setZoom] = useState(1);
 	const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
 
-	// --- FORM INIT ---
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -403,7 +383,6 @@ export default function AboutUsForm({
 		getValues,
 	} = form;
 
-	// Array Fields
 	const {
 		fields: govFields,
 		append: appendGov,
@@ -415,7 +394,6 @@ export default function AboutUsForm({
 		remove: removeStruct,
 	} = useFieldArray({ control, name: "company_structure_list" });
 
-	// --- PREFILL ---
 	useEffect(() => {
 		if (initialData && isEditMode) {
 			setGlobalPreviews({
@@ -428,7 +406,6 @@ export default function AboutUsForm({
 				history_image_child: initialData.history_image_child,
 			});
 
-			// Helper to convert string array to object array
 			const toObjArr = (arr?: string[]) =>
 				arr?.map((s) => ({ text: s })) || [{ text: "" }];
 
@@ -456,7 +433,6 @@ export default function AboutUsForm({
 				bod_title: initialData.aboutUsPageId?.bod_title || "",
 				bod_desc: initialData.aboutUsPageId?.bod_desc || "",
 
-				// EN
 				hero_title_en: initialData.aboutUsPageEn?.hero_title || "",
 				hero_desc_en: initialData.aboutUsPageEn?.hero_desc || "",
 				vision_title_en: initialData.aboutUsPageEn?.vision_title || "",
@@ -480,14 +456,11 @@ export default function AboutUsForm({
 				bod_title_en: initialData.aboutUsPageEn?.bod_title || "",
 				bod_desc_en: initialData.aboutUsPageEn?.bod_desc || "",
 
-				// Lists
 				governance_list: initialData.governances || [],
 				company_structure_list: initialData.companyStructures || [],
 			});
 		}
 	}, [initialData, isEditMode, reset]);
-
-	// --- CROP HANDLERS ---
 
 	const initiateCrop = (
 		file: File,
@@ -543,7 +516,6 @@ export default function AboutUsForm({
 		}
 	};
 
-	// --- AUTO TRANSLATE ---
 	const handleAutoTranslate = async (lang: string) => {
 		setIsTranslating(true);
 		let simpleFields;
@@ -587,16 +559,13 @@ export default function AboutUsForm({
 			];
 		}
 
-		// Helper to get text from dynamic arrays
 		const getListText = (key: string) => {
 			const arr = getValues(key as any);
 			return Array.isArray(arr) ? arr.map((i: any) => i.text).join("\n") : "";
 		};
 
-		// 1. Simple Text Translation
 		const texts = simpleFields.map((f) => getValues(f.src as any) || "");
 
-		// 2. List Translation (Vision & Mission)
 		const visionListSrc = getListText("vision_list");
 		const missionListSrc = getListText("mission_list");
 
@@ -625,13 +594,11 @@ export default function AboutUsForm({
 				if (Array.isArray(batch)) results = [...results, ...batch];
 			}
 
-			// Assign Simple Fields
 			simpleFields.forEach((field, i) => {
 				if (results[i])
 					setValue(field.dest as any, results[i], { shouldValidate: true });
 			});
 
-			// Assign Lists (Split back to array)
 			const visionListRes = results[texts.length];
 			if (visionListRes)
 				setValue(
@@ -658,14 +625,12 @@ export default function AboutUsForm({
 		setIsLoading(true);
 		const formData = new FormData();
 
-		// 1. Text Fields
 		Object.entries(data).forEach(([key, value]) => {
 			if (!Array.isArray(value) && typeof value !== "object") {
 				formData.append(key, String(value));
 			}
 		});
 
-		// 2. List Text (Obj Array to String Array)
 		const mapList = (arr: any[]) =>
 			JSON.stringify(arr.map((i) => i.text).filter((t) => t));
 		formData.append("vision_list", mapList(data.vision_list));
@@ -673,12 +638,10 @@ export default function AboutUsForm({
 		formData.append("vision_list_en", mapList(data.vision_list_en));
 		formData.append("mission_list_en", mapList(data.mission_list_en));
 
-		// 3. Global Files
 		Object.entries(globalFiles).forEach(([key, file]) => {
 			if (file) formData.append(key, file);
 		});
 
-		// 4. Governance List (Images + Data)
 		const governancePayload = data.governance_list.map((item, index) => {
 			const fileKey = `governance_list-${index}`;
 			const file = listFiles[fileKey];
@@ -693,7 +656,6 @@ export default function AboutUsForm({
 		});
 		formData.append("governance_list", JSON.stringify(governancePayload));
 
-		// 5. Structure List
 		const structurePayload = data.company_structure_list.map((item, index) => {
 			const fileKey = `company_structure_list-${index}`;
 			const file = listFiles[fileKey];
@@ -708,7 +670,6 @@ export default function AboutUsForm({
 		});
 		formData.append("company_structure_list", JSON.stringify(structurePayload));
 
-		// Send
 		const url =
 			isEditMode && initialData?.id ?
 				`${process.env.NEXT_PUBLIC_API_URL}/page/about-us/${initialData.id}`
@@ -726,6 +687,9 @@ export default function AboutUsForm({
 				throw new Error(result.message);
 			}
 			toast.success("Saved successfully!");
+			setTimeout(() => {
+				router.push("/admin/pages/about-us");
+			}, 500);
 		} catch (e: any) {
 			toast.error(e.message || "Failed to save");
 		} finally {
@@ -1258,7 +1222,7 @@ export default function AboutUsForm({
 											preview={preview}
 											onFileSelect={(f) =>
 												initiateCrop(f, previewKey, "list", 2 / 3)
-											} // 4:6 = 2:3 Ratio
+											}
 											isNew={!!listFiles[previewKey]}
 											aspectClass="aspect-[2/3]"
 										/>
@@ -1368,7 +1332,7 @@ export default function AboutUsForm({
 											preview={preview}
 											onFileSelect={(f) =>
 												initiateCrop(f, previewKey, "list", 1)
-											} // Square 1:1
+											}
 											isNew={!!listFiles[previewKey]}
 											aspectClass="aspect-square"
 										/>
@@ -1436,7 +1400,7 @@ export default function AboutUsForm({
 								image={cropState.imageSrc}
 								crop={crop}
 								zoom={zoom}
-								aspect={cropState.aspectRatio} // Dynamic Aspect Ratio
+								aspect={cropState.aspectRatio}
 								onCropChange={setCrop}
 								onCropComplete={(_, croppedAreaPixels) =>
 									setCroppedAreaPixels(croppedAreaPixels)

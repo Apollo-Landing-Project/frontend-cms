@@ -180,7 +180,9 @@ export default function CarGalleryForm({
 			const res = await fetch(url, { method, body: formData });
 			if (!res.ok) throw new Error("Failed");
 			toast.success(isEditMode ? "Car updated!" : "Car added!");
-			router.push("/admin/content/car-gallery");
+			setTimeout(() => {
+				router.push("/admin/content/car-gallery");
+			}, 500);
 		} catch {
 			toast.error("Error saving car");
 		} finally {

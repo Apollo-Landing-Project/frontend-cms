@@ -264,7 +264,7 @@ export default function ServiceItemForm({
 						method: "POST",
 						headers: { "Content-Type": "application/json" },
 						credentials: "include",
-						body: JSON.stringify({ texts: chunkTexts, target_lang: lang}),
+						body: JSON.stringify({ texts: chunkTexts, target_lang: lang }),
 						cache: "no-store",
 					},
 				);
@@ -328,7 +328,9 @@ export default function ServiceItemForm({
 			});
 			if (!res.ok) throw new Error("Failed");
 			toast.success(isEditMode ? "Service updated!" : "Service created!");
-			router.push("/admin/content/services-items");
+			setTimeout(() => {
+				router.push("/admin/content/services-items");
+			}, 500);
 		} catch {
 			toast.error("Error saving service");
 		} finally {
