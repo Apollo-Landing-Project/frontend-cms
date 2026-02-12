@@ -172,12 +172,12 @@ export default function CarGalleryForm({
 		const url =
 			isEditMode ?
 				`${process.env.NEXT_PUBLIC_API_URL}/car-gallery/${initialData.id}`
-			:	`${process.env.NEXT_PUBLIC_API_URL}/car-gallery`;
+				: `${process.env.NEXT_PUBLIC_API_URL}/car-gallery`;
 
 		const method = isEditMode ? "PUT" : "POST";
 
 		try {
-			const res = await fetch(url, { method, body: formData });
+			const res = await fetch(url, { method, body: formData, credentials: "include" });
 			if (!res.ok) throw new Error("Failed");
 			toast.success(isEditMode ? "Car updated!" : "Car added!");
 			setTimeout(() => {
@@ -213,7 +213,7 @@ export default function CarGalleryForm({
 					>
 						{isTranslating ?
 							<Loader2 className="animate-spin mr-2 h-4 w-4" />
-						:	<Sparkles className="mr-2 h-4 w-4" />}
+							: <Sparkles className="mr-2 h-4 w-4" />}
 						Auto Translate (EN → ID)
 					</Button>
 					<Button
@@ -226,7 +226,7 @@ export default function CarGalleryForm({
 					>
 						{isTranslating ?
 							<Loader2 className="animate-spin mr-2 h-4 w-4" />
-						:	<Sparkles className="mr-2 h-4 w-4" />}
+							: <Sparkles className="mr-2 h-4 w-4" />}
 						Auto Translate (ID → EN)
 					</Button>
 				</div>
@@ -323,7 +323,7 @@ export default function CarGalleryForm({
 					>
 						{isLoading ?
 							<Loader2 className="animate-spin mr-2" />
-						:	null}
+							: null}
 						{isEditMode ? "Save Changes" : "Add Car"}
 					</Button>
 				</div>

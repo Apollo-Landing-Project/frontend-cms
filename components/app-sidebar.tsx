@@ -103,7 +103,7 @@ const data = {
 		},
 		{
 			name: "Landing Page",
-			url: "https://evaluasipembelajaran.site",
+			url: "https://apolloglobalinteractive.com",
 			icon: Send,
 		},
 	],
