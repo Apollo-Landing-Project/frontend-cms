@@ -54,7 +54,7 @@ export default function PartnerForm({
     const [croppedArea, setCroppedArea] = useState(null);
 
     const form = useForm<FormValues>({
-        resolver: zodResolver(formSchema),
+        resolver: zodResolver(formSchema) as any,
         defaultValues: {
             name: "",
             category: "INSURANCE",
