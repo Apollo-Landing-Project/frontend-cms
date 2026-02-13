@@ -210,7 +210,7 @@ export default function ServiceItemList() {
 			: items.length === 0 ?
 				<div className="text-center py-20 bg-slate-50 rounded-2xl border border-dashed border-slate-300">
 					<p className="text-slate-500 mb-4">No services found.</p>
-					<Link href="/admin/services/items/create">
+					<Link href="/admin/content/services-items/create">
 						<Button variant="outline">Create First Service</Button>
 					</Link>
 				</div>

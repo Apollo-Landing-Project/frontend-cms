@@ -70,7 +70,7 @@ const data = {
 				},
 				{
 					title: "News (CSR)",
-					url: "/admin/content/csr",
+					url: "/admin/content/news/csr",
 					icon: Heart,
 				},
 				{

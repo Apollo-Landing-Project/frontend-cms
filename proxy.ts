@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
-const PUBLIC_PATHS = ["/", "/auth/login"];
+const PUBLIC_PATHS = ["/auth/login"];
 const ADMIN_PATHS = ["/admin"];
 
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET!);
@@ -22,6 +22,22 @@ export async function proxy(req: NextRequest) {
 	}
 
 	const token = req.cookies.get("token")?.value;
+
+	// 2. Handle root path: redirect based on auth status
+	if (pathname === "/") {
+		if (token) {
+			try {
+				await jwtVerify(token, JWT_SECRET);
+				return NextResponse.redirect(new URL("/admin", req.url));
+			} catch {
+				// Token tidak valid, redirect ke login
+				const response = NextResponse.redirect(new URL("/auth/login", req.url));
+				response.cookies.delete("token");
+				return response;
+			}
+		}
+		return NextResponse.redirect(new URL("/auth/login", req.url));
+	}
 
 	// 3. Jika sudah login tapi malah mau buka halaman login, lempar ke admin
 	if (pathname === "/auth/login" && token) {

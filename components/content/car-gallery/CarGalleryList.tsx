@@ -70,7 +70,7 @@ export default function CarGalleryList() {
 						Kelola koleksi foto dan deskripsi mobil.
 					</p>
 				</div>
-				<Link href="/admin/car-gallery/create">
+				<Link href="/admin/content/car-gallery/create">
 					<Button className="gap-2 shadow-lg shadow-blue-500/20">
 						<Plus size={18} /> Add New Car
 					</Button>
@@ -98,7 +98,7 @@ export default function CarGalleryList() {
 					<p className="text-slate-500 mb-6 max-w-sm">
 						Belum ada mobil yang ditambahkan.
 					</p>
-					<Link href="/admin/car-gallery/create">
+					<Link href="/admin/content/car-gallery/create">
 						<Button variant="outline">Tambah Mobil Pertama</Button>
 					</Link>
 				</div>
@@ -148,7 +148,7 @@ export default function CarGalleryList() {
 
 							{/* ACTIONS */}
 							<CardFooter className="p-3 bg-slate-50/50 border-t flex gap-2">
-								<Link href={`/admin/car-gallery/${item.id}`} className="flex-1">
+								<Link href={`/admin/content/car-gallery/update/${item.id}`} className="flex-1">
 									<Button
 										variant="outline"
 										size="sm"
