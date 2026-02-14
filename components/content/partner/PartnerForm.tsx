@@ -146,7 +146,10 @@ export default function PartnerForm({
                 </h1>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={handleSubmit(onSubmit, (errors) => {
+                toast.error("Please check the form for errors");
+                console.error("Form Errors:", errors);
+            })} className="space-y-8">
                 {/* 1. LOGO IMAGE (SQUARE) */}
                 <Card>
                     <CardHeader>

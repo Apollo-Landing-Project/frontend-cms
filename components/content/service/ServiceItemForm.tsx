@@ -33,12 +33,14 @@ import { cn } from "@/lib/utils";
 const formSchema = z.object({
 	// ID
 	title: z.string().min(1, "Title (ID) required"),
+    badge: z.string().min(1, "Badge (ID) required"),
 	desc: z.string().min(1, "Description (ID) required"),
 	quote: z.string().optional(),
 	location: z.string().min(1, "Location (ID) required"),
 
 	// EN
 	title_en: z.string().min(1, "Title (EN) required"),
+    badge_en: z.string().min(1, "Badge (EN) required"),
 	desc_en: z.string().min(1, "Description (EN) required"),
 	quote_en: z.string().optional(),
 	location_en: z.string().min(1, "Location (EN) required"),
@@ -137,10 +139,12 @@ export default function ServiceItemForm({
 			contact: [{ value: "" }],
 			email: [{ value: "" }],
 			title: "",
+            badge: "",
 			desc: "",
 			quote: "",
 			location: "",
 			title_en: "",
+            badge_en: "",
 			desc_en: "",
 			quote_en: "",
 			location_en: "",
@@ -178,11 +182,12 @@ export default function ServiceItemForm({
 
 			reset({
 				title: initialData.serviceId?.title || "",
+                badge: initialData.serviceId?.badge || "",
 				desc: initialData.serviceId?.desc || "",
 				quote: initialData.serviceId?.quote || "",
 				location: initialData.serviceId?.location || "",
-
 				title_en: initialData.serviceEn?.title || "",
+                badge_en: initialData.serviceEn?.badge || "",
 				desc_en: initialData.serviceEn?.desc || "",
 				quote_en: initialData.serviceEn?.quote || "",
 				location_en: initialData.serviceEn?.location || "",
@@ -224,6 +229,7 @@ export default function ServiceItemForm({
 		if (lang == "en") {
 			fieldMapping = [
 				{ src: "title", dest: "title_en" },
+                { src: "badge", dest: "badge_en" },
 				{ src: "desc", dest: "desc_en" },
 				{ src: "quote", dest: "quote_en" },
 				{ src: "location", dest: "location_en" },
@@ -231,13 +237,24 @@ export default function ServiceItemForm({
 		} else {
 			fieldMapping = [
 				{ src: "title_en", dest: "title" },
+                { src: "badge_en", dest: "badge" },
 				{ src: "desc_en", dest: "desc" },
 				{ src: "quote_en", dest: "quote" },
 				{ src: "location_en", dest: "location" },
-			];
-		}
+            ];
+        }
 
-		const textsToTranslate = fieldMapping.map(
+        // Validate source fields
+        const sourceKeys = fieldMapping.map((f) => f.src);
+        const isValid = await form.trigger(sourceKeys as any);
+
+        if (!isValid) {
+            toast.error("Please fill in required fields first");
+            setIsTranslating(false);
+            return;
+        }
+
+        const textsToTranslate = fieldMapping.map(
 			(f) => getValues(f.src as any) || "",
 		);
 
@@ -380,8 +397,11 @@ export default function ServiceItemForm({
 				</div>
 			</div>
 
-			<form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-				{/* 1. IMAGE UPLOAD */}
+			<form onSubmit={handleSubmit(onSubmit, (errors) => {
+                toast.error("Please check the form for errors");
+                console.error("Form Errors:", errors);
+            })} className="space-y-8">
+                {/* 1. IMAGE UPLOAD */}
 				<Card>
 					<CardHeader>
 						<CardTitle>Service Image (16:9)</CardTitle>
@@ -521,6 +541,12 @@ export default function ServiceItemForm({
 									register={register}
 									error={errors.title}
 								/>
+                                <FormInput
+									id="badge"
+									label="Service Badge"
+									register={register}
+									error={errors.badge}
+								/>
 								<FormInput
 									id="desc"
 									label="Description"
@@ -571,6 +597,12 @@ export default function ServiceItemForm({
 									label="Service Title"
 									register={register}
 									error={errors.title_en}
+								/>
+                                <FormInput
+									id="badge_en"
+									label="Service Badge (EN)"
+									register={register}
+									error={errors.badge_en}
 								/>
 								<FormInput
 									id="desc_en"

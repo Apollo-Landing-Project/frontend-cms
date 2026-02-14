@@ -16,6 +16,7 @@ import {
     Image as ImageIcon,
     LayoutTemplate,
     TrendingUp,
+    FileText,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getCroppedImg } from "@/utils/canvasUtils";
@@ -50,14 +51,24 @@ const formSchema = z.object({
     // ID
     hero_title: z.string().min(1, "Hero Title (ID) is required"),
     hero_desc: z.string().min(1, "Hero Desc (ID) is required"),
-    shareholders_title: z.string().min(1, "Shareholders Title (ID) is required"),
-    shareholders_desc: z.string().min(1, "Shareholders Desc (ID) is required"),
+    hero_badge: z.string().min(1, "Hero Badge (ID) is required"),
+    stakeholders_title: z.string().min(1, "Stakeholders Title (ID) is required"),
+    stakeholders_desc: z.string().min(1, "Stakeholders Desc (ID) is required"),
+    stakeholders_badge: z.string().min(1, "Stakeholders Badge (ID) is required"),
+    report_title: z.string().min(1, "Report Title (ID) is required"),
+    report_desc: z.string().min(1, "Report Desc (ID) is required"),
+    report_badge: z.string().min(1, "Report Badge (ID) is required"),
 
     // EN
     hero_title_en: z.string().min(1, "Hero Title (EN) is required"),
     hero_desc_en: z.string().min(1, "Hero Desc (EN) is required"),
-    shareholders_title_en: z.string().min(1, "Shareholders Title (EN) is required"),
-    shareholders_desc_en: z.string().min(1, "Shareholders Desc (EN) is required"),
+    hero_badge_en: z.string().min(1, "Hero Badge (EN) is required"),
+    stakeholders_title_en: z.string().min(1, "Stakeholders Title (EN) is required"),
+    stakeholders_desc_en: z.string().min(1, "Stakeholders Desc (EN) is required"),
+    stakeholders_badge_en: z.string().min(1, "Stakeholders Badge (EN) is required"),
+    report_title_en: z.string().min(1, "Report Title (EN) is required"),
+    report_desc_en: z.string().min(1, "Report Desc (EN) is required"),
+    report_badge_en: z.string().min(1, "Report Badge (EN) is required"),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -163,12 +174,22 @@ export default function InvestorPageForm({
         defaultValues: {
             hero_title: "",
             hero_desc: "",
-            shareholders_title: "",
-            shareholders_desc: "",
+            hero_badge: "",
+            stakeholders_title: "",
+            stakeholders_desc: "",
+            stakeholders_badge: "",
+            report_title: "",
+            report_desc: "",
+            report_badge: "",
             hero_title_en: "",
             hero_desc_en: "",
-            shareholders_title_en: "",
-            shareholders_desc_en: "",
+            hero_badge_en: "",
+            stakeholders_title_en: "",
+            stakeholders_desc_en: "",
+            stakeholders_badge_en: "",
+            report_title_en: "",
+            report_desc_en: "",
+            report_badge_en: "",
         },
     });
 
@@ -189,13 +210,23 @@ export default function InvestorPageForm({
             reset({
                 hero_title: initialData.inverstorPageId?.hero_title || "",
                 hero_desc: initialData.inverstorPageId?.hero_desc || "",
-                shareholders_title: initialData.inverstorPageId?.shareholders_title || "",
-                shareholders_desc: initialData.inverstorPageId?.shareholders_desc || "",
+                hero_badge: initialData.inverstorPageId?.hero_badge || "",
+                stakeholders_title: initialData.inverstorPageId?.stakeholders_title || "",
+                stakeholders_desc: initialData.inverstorPageId?.stakeholders_desc || "",
+                stakeholders_badge: initialData.inverstorPageId?.stakeholders_badge || "",
+                report_title: initialData.inverstorPageId?.report_title || "",
+                report_desc: initialData.inverstorPageId?.report_desc || "",
+                report_badge: initialData.inverstorPageId?.report_badge || "",
 
                 hero_title_en: initialData.inverstorPageEn?.hero_title || "",
                 hero_desc_en: initialData.inverstorPageEn?.hero_desc || "",
-                shareholders_title_en: initialData.inverstorPageEn?.shareholders_title || "",
-                shareholders_desc_en: initialData.inverstorPageEn?.shareholders_desc || "",
+                hero_badge_en: initialData.inverstorPageEn?.hero_badge || "",
+                stakeholders_title_en: initialData.inverstorPageEn?.stakeholders_title || "",
+                stakeholders_desc_en: initialData.inverstorPageEn?.stakeholders_desc || "",
+                stakeholders_badge_en: initialData.inverstorPageEn?.stakeholders_badge || "",
+                report_title_en: initialData.inverstorPageEn?.report_title || "",
+                report_desc_en: initialData.inverstorPageEn?.report_desc || "",
+                report_badge_en: initialData.inverstorPageEn?.report_badge || "",
             });
         }
     }, [initialData, isEditMode, reset]);
@@ -235,16 +266,36 @@ export default function InvestorPageForm({
             fieldMapping = [
                 { src: "hero_title", dest: "hero_title_en" },
                 { src: "hero_desc", dest: "hero_desc_en" },
-                { src: "shareholders_title", dest: "shareholders_title_en" },
-                { src: "shareholders_desc", dest: "shareholders_desc_en" },
+                { src: "hero_badge", dest: "hero_badge_en" },
+                { src: "stakeholders_title", dest: "stakeholders_title_en" },
+                { src: "stakeholders_desc", dest: "stakeholders_desc_en" },
+                { src: "stakeholders_badge", dest: "stakeholders_badge_en" },
+                { src: "report_title", dest: "report_title_en" },
+                { src: "report_desc", dest: "report_desc_en" },
+                { src: "report_badge", dest: "report_badge_en" },
             ];
         } else {
             fieldMapping = [
                 { src: "hero_title_en", dest: "hero_title" },
                 { src: "hero_desc_en", dest: "hero_desc" },
-                { src: "shareholders_title_en", dest: "shareholders_title" },
-                { src: "shareholders_desc_en", dest: "shareholders_desc" },
+                { src: "hero_badge_en", dest: "hero_badge" },
+                { src: "stakeholders_title_en", dest: "stakeholders_title" },
+                { src: "stakeholders_desc_en", dest: "stakeholders_desc" },
+                { src: "stakeholders_badge_en", dest: "stakeholders_badge" },
+                { src: "report_title_en", dest: "report_title" },
+                { src: "report_desc_en", dest: "report_desc" },
+                { src: "report_badge_en", dest: "report_badge" },
             ];
+        }
+
+        // Validate source fields
+        const sourceKeys = fieldMapping.map((f) => f.src);
+        const isValid = await form.trigger(sourceKeys as any);
+
+        if (!isValid) {
+            toast.error("Please fill in required fields first");
+            setIsTranslating(false);
+            return;
         }
 
         const textsToTranslate = fieldMapping.map(
@@ -387,7 +438,10 @@ export default function InvestorPageForm({
                 </div>
             </div>
 
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(onSubmit, (errors) => {
+                toast.error("Please check the form for errors");
+                console.error("Form Errors:", errors);
+            })} className="space-y-8">
                 {/* === SECTION 1: HERO IMAGE (Global) === */}
                 <Card>
                     <CardHeader className="bg-slate-50/50 border-b pb-4">
@@ -483,21 +537,55 @@ export default function InvestorPageForm({
                                 register={form.register}
                                 error={errors.hero_desc}
                             />
+                            <FormInput
+                                id="hero_badge"
+                                label="Hero Badge"
+                                register={form.register}
+                                error={errors.hero_badge}
+                            />
                         </SectionGroup>
 
-                        <SectionGroup title="Shareholders Section (ID)" icon={TrendingUp}>
+                        <SectionGroup title="Stakeholders Section (ID)" icon={TrendingUp}>
                             <FormInput
-                                id="shareholders_title"
-                                label="Shareholders Title"
+                                id="stakeholders_title"
+                                label="Stakeholders Title"
                                 register={form.register}
-                                error={errors.shareholders_title}
+                                error={errors.stakeholders_title}
                             />
                             <FormInput
-                                id="shareholders_desc"
-                                label="Shareholders Description"
+                                id="stakeholders_desc"
+                                label="Stakeholders Description"
                                 textarea
                                 register={form.register}
-                                error={errors.shareholders_desc}
+                                error={errors.stakeholders_desc}
+                            />
+                            <FormInput
+                                id="stakeholders_badge"
+                                label="Stakeholders Badge"
+                                register={form.register}
+                                error={errors.stakeholders_badge}
+                            />
+                        </SectionGroup>
+
+                        <SectionGroup title="Report Section (ID)" icon={FileText}>
+                            <FormInput
+                                id="report_title"
+                                label="Report Title"
+                                register={form.register}
+                                error={errors.report_title}
+                            />
+                            <FormInput
+                                id="report_desc"
+                                label="Report Description"
+                                textarea
+                                register={form.register}
+                                error={errors.report_desc}
+                            />
+                            <FormInput
+                                id="report_badge"
+                                label="Report Badge"
+                                register={form.register}
+                                error={errors.report_badge}
                             />
                         </SectionGroup>
                     </TabsContent>
@@ -518,21 +606,55 @@ export default function InvestorPageForm({
                                 register={form.register}
                                 error={errors.hero_desc_en}
                             />
+                            <FormInput
+                                id="hero_badge_en"
+                                label="Hero Badge (EN)"
+                                register={form.register}
+                                error={errors.hero_badge_en}
+                            />
                         </SectionGroup>
 
-                        <SectionGroup title="Shareholders Section (EN)" icon={TrendingUp}>
+                        <SectionGroup title="Stakeholders Section (EN)" icon={TrendingUp}>
                             <FormInput
-                                id="shareholders_title_en"
-                                label="Shareholders Title (EN)"
+                                id="stakeholders_title_en"
+                                label="Stakeholders Title (EN)"
                                 register={form.register}
-                                error={errors.shareholders_title_en}
+                                error={errors.stakeholders_title_en}
                             />
                             <FormInput
-                                id="shareholders_desc_en"
-                                label="Shareholders Description (EN)"
+                                id="stakeholders_desc_en"
+                                label="Stakeholders Description (EN)"
                                 textarea
                                 register={form.register}
-                                error={errors.shareholders_desc_en}
+                                error={errors.stakeholders_desc_en}
+                            />
+                            <FormInput
+                                id="stakeholders_badge_en"
+                                label="Stakeholders Badge (EN)"
+                                register={form.register}
+                                error={errors.stakeholders_badge_en}
+                            />
+                        </SectionGroup>
+
+                        <SectionGroup title="Report Section (EN)" icon={FileText}>
+                            <FormInput
+                                id="report_title_en"
+                                label="Report Title (EN)"
+                                register={form.register}
+                                error={errors.report_title_en}
+                            />
+                            <FormInput
+                                id="report_desc_en"
+                                label="Report Description (EN)"
+                                textarea
+                                register={form.register}
+                                error={errors.report_desc_en}
+                            />
+                            <FormInput
+                                id="report_badge_en"
+                                label="Report Badge (EN)"
+                                register={form.register}
+                                error={errors.report_badge_en}
                             />
                         </SectionGroup>
                     </TabsContent>

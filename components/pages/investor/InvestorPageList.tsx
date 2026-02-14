@@ -200,9 +200,9 @@ export default function InvestorPageList() {
                                             >
                                                 <Globe size={12} /> Dual Language
                                             </div>
-                                            {item.inverstorPageId?.shareholders_title && (
+                                            {item.inverstorPageId?.stakeholders_title && (
                                                 <div className="flex items-center gap-1 line-clamp-1 max-w-[150px]">
-                                                    <FileText size={12} /> {item.inverstorPageId.shareholders_title}
+                                                    <FileText size={12} /> {item.inverstorPageId.stakeholders_title}
                                                 </div>
                                             )}
                                         </div>

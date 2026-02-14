@@ -21,6 +21,8 @@ import Tiptap from "@/components/ui/Tiptap";
 const formSchema = z.object({
     title: z.string().min(1, "Title (ID) required"),
     title_en: z.string().min(1, "Title (EN) required"),
+    badge: z.string().min(1, "Badge (ID) required"),
+    badge_en: z.string().min(1, "Badge (EN) required"),
     description: z.string().optional(),
     description_en: z.string().optional(),
     author: z.string().optional(),
@@ -77,11 +79,14 @@ export default function NewsNewsForm({
         reset,
         getValues,
         setValue,
+        trigger,
     } = useForm<FormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             title: "",
             title_en: "",
+            badge: "",
+            badge_en: "",
             description: "",
             description_en: "",
             author: "",
@@ -94,6 +99,8 @@ export default function NewsNewsForm({
             reset({
                 title: initialData.newsNewsId?.title || "",
                 title_en: initialData.newsNewsEn?.title || "",
+                badge: initialData.newsNewsId?.badge || "",
+                badge_en: initialData.newsNewsEn?.badge || "",
                 description: initialData.newsNewsId?.description || "",
                 description_en: initialData.newsNewsEn?.description || "",
                 author: initialData.author || "",
@@ -139,8 +146,18 @@ export default function NewsNewsForm({
 
         const fieldMapping =
             lang === "en"
-                ? [{ src: "title", dest: "title_en" }, { src: "description", dest: "description_en" }]
-                : [{ src: "title_en", dest: "title" }, { src: "description_en", dest: "description" }];
+                ? [{ src: "title", dest: "title_en" }, { src: "description", dest: "description_en" }, { src: "badge", dest: "badge_en" }]
+                : [{ src: "title_en", dest: "title" }, { src: "description_en", dest: "description" }, { src: "badge_en", dest: "badge" }];
+
+        // Validate source fields
+        const sourceKeys = fieldMapping.map((f) => f.src);
+        const isValid = await trigger(sourceKeys as any);
+
+        if (!isValid) {
+            toast.error("Please fill in required fields first");
+            setIsTranslating(false);
+            return;
+        }
 
         const textsToTranslate = fieldMapping.map(
             (f) => getValues(f.src as any) || "",
@@ -217,6 +234,8 @@ export default function NewsNewsForm({
 
         formData.append("title", data.title);
         formData.append("title_en", data.title_en);
+        formData.append("badge", data.badge);
+        formData.append("badge_en", data.badge_en);
         if (data.description) formData.append("description", data.description);
         if (data.description_en) formData.append("description_en", data.description_en);
         formData.append("content", contentId);
@@ -303,7 +322,10 @@ export default function NewsNewsForm({
                 </div>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={handleSubmit(onSubmit, (errors) => {
+                toast.error("Please check the form for errors");
+                console.error("Form Errors:", errors);
+            })} className="space-y-8">
                 {/* 1. IMAGES */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <Card className="md:col-span-2">
@@ -385,6 +407,12 @@ export default function NewsNewsForm({
                                     placeholder="Judul berita..."
                                 />
                                 <FormInput
+                                    label="Badge"
+                                    register={register("badge")}
+                                    error={errors.badge}
+                                    placeholder="Badge berita... (mis: Berita Terbaru)"
+                                />
+                                <FormInput
                                     label="Description"
                                     register={register("description")}
                                     error={errors.description}
@@ -420,6 +448,12 @@ export default function NewsNewsForm({
                                     register={register("title_en")}
                                     error={errors.title_en}
                                     placeholder="News title..."
+                                />
+                                <FormInput
+                                    label="Badge"
+                                    register={register("badge_en")}
+                                    error={errors.badge_en}
+                                    placeholder="News badge... (e.g. Latest News)"
                                 />
                                 <FormInput
                                     label="Description"

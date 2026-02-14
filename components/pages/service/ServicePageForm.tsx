@@ -52,16 +52,20 @@ const formSchema = z.object({
 	// ID
 	hero_title: z.string().min(1, "Hero Title (ID) is required"),
 	hero_desc: z.string().min(1, "Hero Desc (ID) is required"),
+    hero_badge: z.string().min(1, "Hero Badge (ID) is required"),
 	used_car_gallery_title: z.string().min(1, "Gallery Title (ID) is required"),
 	used_car_gallery_desc: z.string().min(1, "Gallery Desc (ID) is required"),
+    used_car_gallery_badge: z.string().min(1, "Gallery Badge (ID) is required"),
 
 	// EN
 	hero_title_en: z.string().min(1, "Hero Title (EN) is required"),
 	hero_desc_en: z.string().min(1, "Hero Desc (EN) is required"),
+    hero_badge_en: z.string().min(1, "Hero Badge (EN) is required"),
 	used_car_gallery_title_en: z
 		.string()
 		.min(1, "Gallery Title (EN) is required"),
 	used_car_gallery_desc_en: z.string().min(1, "Gallery Desc (EN) is required"),
+    used_car_gallery_badge_en: z.string().min(1, "Gallery Badge (EN) is required"),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -167,12 +171,16 @@ export default function ServicePageForm({
 		defaultValues: {
 			hero_title: "",
 			hero_desc: "",
+            hero_badge: "",
 			used_car_gallery_title: "",
 			used_car_gallery_desc: "",
+            used_car_gallery_badge: "",
 			hero_title_en: "",
 			hero_desc_en: "",
+            hero_badge_en: "",
 			used_car_gallery_title_en: "",
 			used_car_gallery_desc_en: "",
+            used_car_gallery_badge_en: "",
 		},
 	});
 
@@ -194,18 +202,24 @@ export default function ServicePageForm({
 				// ID Content
 				hero_title: initialData.servicePageId?.hero_title || "",
 				hero_desc: initialData.servicePageId?.hero_desc || "",
+                hero_badge: initialData.servicePageId?.hero_badge || "",
 				used_car_gallery_title:
 					initialData.servicePageId?.used_car_gallery_title || "",
 				used_car_gallery_desc:
 					initialData.servicePageId?.used_car_gallery_desc || "",
+                used_car_gallery_badge:
+					initialData.servicePageId?.used_car_gallery_badge || "",
 
 				// English Content
 				hero_title_en: initialData.servicePageEn?.hero_title || "",
 				hero_desc_en: initialData.servicePageEn?.hero_desc || "",
+                hero_badge_en: initialData.servicePageEn?.hero_badge || "",
 				used_car_gallery_title_en:
 					initialData.servicePageEn?.used_car_gallery_title || "",
 				used_car_gallery_desc_en:
 					initialData.servicePageEn?.used_car_gallery_desc || "",
+                used_car_gallery_badge_en:
+					initialData.servicePageEn?.used_car_gallery_badge || "",
 			});
 		}
 	}, [initialData, isEditMode, reset]);
@@ -246,17 +260,31 @@ export default function ServicePageForm({
 			fieldMapping = [
 				{ src: "hero_title", dest: "hero_title_en" },
 				{ src: "hero_desc", dest: "hero_desc_en" },
+                { src: "hero_badge", dest: "hero_badge_en" },
 				{ src: "used_car_gallery_title", dest: "used_car_gallery_title_en" },
 				{ src: "used_car_gallery_desc", dest: "used_car_gallery_desc_en" },
+                { src: "used_car_gallery_badge", dest: "used_car_gallery_badge_en" },
 			];
 		} else {
 			fieldMapping = [
 				{ src: "hero_title_en", dest: "hero_title" },
 				{ src: "hero_desc_en", dest: "hero_desc" },
+                { src: "hero_badge_en", dest: "hero_badge" },
 				{ src: "used_car_gallery_title_en", dest: "used_car_gallery_title" },
 				{ src: "used_car_gallery_desc_en", dest: "used_car_gallery_desc" },
+                { src: "used_car_gallery_badge_en", dest: "used_car_gallery_badge" },
 			];
 		}
+
+        // Validate source fields
+        const sourceKeys = fieldMapping.map((f) => f.src);
+        const isValid = await form.trigger(sourceKeys as any);
+
+        if (!isValid) {
+            toast.error("Please fill in required fields first");
+            setIsTranslating(false);
+            return;
+        }
 
 		const textsToTranslate = fieldMapping.map(
 			(f) => getValues(f.src as any) || "",
@@ -412,8 +440,12 @@ export default function ServicePageForm({
 				</div>
 			</div>
 
-			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-				{/* === SECTION 1: HERO IMAGE === */}
+			{/* === FORM START === */}
+			<form onSubmit={form.handleSubmit(onSubmit, (errors) => {
+                toast.error("Please check the form for errors");
+                console.error("Form Errors:", errors);
+            })} className="space-y-8">
+				{/* === IMAGES CARD (Top Section) === */}
 				<Card>
 					<CardHeader className="bg-slate-50/50 border-b pb-4">
 						<CardTitle className="flex items-center gap-2 text-base text-slate-800">
@@ -507,6 +539,12 @@ export default function ServicePageForm({
 								register={form.register}
 								error={errors.hero_desc}
 							/>
+                            <FormInput
+								id="hero_badge"
+								label="Hero Badge"
+								register={form.register}
+								error={errors.hero_badge}
+							/>
 						</SectionGroup>
 
 						<SectionGroup title="Car Gallery Section (ID)" icon={Car}>
@@ -522,6 +560,12 @@ export default function ServicePageForm({
 								textarea
 								register={form.register}
 								error={errors.used_car_gallery_desc}
+							/>
+                            <FormInput
+								id="used_car_gallery_badge"
+								label="Gallery Badge"
+								register={form.register}
+								error={errors.used_car_gallery_badge}
 							/>
 						</SectionGroup>
 					</TabsContent>
@@ -542,6 +586,12 @@ export default function ServicePageForm({
 								register={form.register}
 								error={errors.hero_desc_en}
 							/>
+                            <FormInput
+								id="hero_badge_en"
+								label="Hero Badge (EN)"
+								register={form.register}
+								error={errors.hero_badge_en}
+							/>
 						</SectionGroup>
 
 						<SectionGroup title="Car Gallery Section (EN)" icon={Car}>
@@ -557,6 +607,12 @@ export default function ServicePageForm({
 								textarea
 								register={form.register}
 								error={errors.used_car_gallery_desc_en}
+							/>
+                            <FormInput
+								id="used_car_gallery_badge_en"
+								label="Gallery Badge (EN)"
+								register={form.register}
+								error={errors.used_car_gallery_badge_en}
 							/>
 						</SectionGroup>
 					</TabsContent>

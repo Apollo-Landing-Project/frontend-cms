@@ -24,6 +24,8 @@ import {
 	Settings,
 	Send,
 	BookPlus,
+	CastIcon,
+	PieChart,
 } from "lucide-react";
 
 const data = {
@@ -41,7 +43,6 @@ const data = {
 				{ title: "Our Service", url: "/admin/pages/service" },
 				{ title: "News", url: "/admin/pages/news" },
 				{ title: "Investor", url: "/admin/pages/investor" },
-				{ title: "Footer", url: "/admin/pages/footer" },
 			],
 		},
 
@@ -54,9 +55,9 @@ const data = {
 			icon: FileText,
 			items: [
 				{
-					title: "Services Items",
-					url: "/admin/content/services-items",
-					icon: Car,
+					title: "Partner",
+					url: "/admin/content/partner",
+					icon: CastIcon,
 				},
 				{
 					title: "Car Gallery",
@@ -77,6 +78,11 @@ const data = {
 					title: "Report / Investor",
 					url: "/admin/content/report",
 					icon: TrendingUp,
+				},
+				{
+					title: "Shares (Saham)",
+					url: "/admin/content/shares",
+					icon: PieChart,
 				},
 			],
 		},

@@ -55,25 +55,36 @@ import { useRouter } from "next/navigation";
 
 // --- 1. TYPES & INTERFACES ---
 
-// Interface untuk Initial Data dari Backend (Menggantikan 'any')
 interface HomePageContent {
-	hero_title?: string;
-	hero_desc?: string;
 	about_us_title?: string;
 	about_us_desc?: string;
+	about_us_badge?: string;
 	services_title?: string;
 	services_desc?: string;
+	services_badge?: string;
 	news_title?: string;
 	news_desc?: string;
+	news_badge?: string;
 	partners_title?: string;
 	partners_desc?: string;
+	partners_badge?: string;
 	contact_title?: string;
 	contact_desc?: string;
 }
 
+interface HeroSlide {
+	id: string;
+	order: number;
+	bg_image: string | null;
+	title_id: string | null;
+	desc_id: string | null;
+	title_en: string | null;
+	desc_en: string | null;	
+}
+
 interface HomePageData {
 	id: string;
-	hero_bg: string[];
+	heroSlides: HeroSlide[];
 	about_us_years_exp: number;
 	about_us_products: number;
 	about_us_countries: number;
@@ -97,31 +108,51 @@ const baseSchema = z.object({
 	contact_link_map: z.string().url().or(z.literal("")),
 	contact_address: z.string().min(1, "Address is required"),
 
-	// ID
-	hero_title: z.string().min(1, "Required"),
-	hero_desc: z.string().min(1, "Required"),
+	// Per-slide hero fields (ID)
+	hero_title_0: z.string().optional(),
+	hero_desc_0: z.string().optional(),
+	hero_title_1: z.string().optional(),
+	hero_desc_1: z.string().optional(),
+	hero_title_2: z.string().optional(),
+	hero_desc_2: z.string().optional(),
+
+	// Per-slide hero fields (EN)
+	hero_title_en_0: z.string().optional(),
+	hero_desc_en_0: z.string().optional(),
+	hero_title_en_1: z.string().optional(),
+	hero_desc_en_1: z.string().optional(),
+	hero_title_en_2: z.string().optional(),
+	hero_desc_en_2: z.string().optional(),
+
+	// ID - other sections
 	about_us_title: z.string().min(1, "Required"),
 	about_us_desc: z.string().min(1, "Required"),
+	about_us_badge: z.string().min(1, "Required"),
 	services_title: z.string().min(1, "Required"),
 	services_desc: z.string().min(1, "Required"),
+	services_badge: z.string().min(1, "Required"),
 	news_title: z.string().min(1, "Required"),
 	news_desc: z.string().min(1, "Required"),
+	news_badge: z.string().min(1, "Required"),
 	partners_title: z.string().min(1, "Required"),
 	partners_desc: z.string().min(1, "Required"),
+	partners_badge: z.string().min(1, "Required"),
 	contact_title: z.string().min(1, "Required"),
 	contact_desc: z.string().min(1, "Required"),
 
-	// EN
-	hero_title_en: z.string().min(1, "Required"),
-	hero_desc_en: z.string().min(1, "Required"),
+	// EN - other sections
 	about_us_title_en: z.string().min(1, "Required"),
 	about_us_desc_en: z.string().min(1, "Required"),
+	about_us_badge_en: z.string().min(1, "Required"),
 	services_title_en: z.string().min(1, "Required"),
 	services_desc_en: z.string().min(1, "Required"),
+	services_badge_en: z.string().min(1, "Required"),
 	news_title_en: z.string().min(1, "Required"),
 	news_desc_en: z.string().min(1, "Required"),
+	news_badge_en: z.string().min(1, "Required"),
 	partners_title_en: z.string().min(1, "Required"),
 	partners_desc_en: z.string().min(1, "Required"),
+	partners_badge_en: z.string().min(1, "Required"),
 	contact_title_en: z.string().min(1, "Required"),
 	contact_desc_en: z.string().min(1, "Required"),
 });
@@ -191,7 +222,7 @@ const SectionGroup = ({
 	children,
 }: {
 	title: string;
-	icon?: React.ElementType; // Fix type for Icon
+	icon?: React.ElementType;
 	children: React.ReactNode;
 }) => (
 	<div className="rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
@@ -206,7 +237,7 @@ const SectionGroup = ({
 // --- 4. MAIN COMPONENT ---
 
 interface HomePageFormProps {
-	initialData?: HomePageData; // Ganti 'any' dengan Interface
+	initialData?: HomePageData;
 	isEditMode?: boolean;
 }
 
@@ -244,28 +275,48 @@ export default function HomePageForm({
 			contact_phone: [{ value: "" }],
 			contact_link_map: "",
 			contact_address: "",
-			hero_title: "",
-			hero_desc: "",
+			// Per-slide hero fields (ID)
+			hero_title_0: "",
+			hero_desc_0: "",
+			hero_title_1: "",
+			hero_desc_1: "",
+			hero_title_2: "",
+			hero_desc_2: "",
+			// Per-slide hero fields (EN)
+			hero_title_en_0: "",
+			hero_desc_en_0: "",
+			hero_title_en_1: "",
+			hero_desc_en_1: "",
+			hero_title_en_2: "",
+			hero_desc_en_2: "",
+			// Other sections (ID)
 			about_us_title: "",
 			about_us_desc: "",
+			about_us_badge: "",
 			services_title: "",
 			services_desc: "",
+			services_badge: "",
 			news_title: "",
 			news_desc: "",
+			news_badge: "",
 			partners_title: "",
 			partners_desc: "",
+			partners_badge: "",
 			contact_title: "",
 			contact_desc: "",
-			hero_title_en: "",
-			hero_desc_en: "",
+			// Other sections (EN)
 			about_us_title_en: "",
 			about_us_desc_en: "",
+			about_us_badge_en: "",
 			services_title_en: "",
 			services_desc_en: "",
+			services_badge_en: "",
 			news_title_en: "",
 			news_desc_en: "",
+			news_badge_en: "",
 			partners_title_en: "",
 			partners_desc_en: "",
+			partners_badge_en: "",
 			contact_title_en: "",
 			contact_desc_en: "",
 		},
@@ -287,14 +338,29 @@ export default function HomePageForm({
 	// --- PREFILL DATA ---
 	useEffect(() => {
 		if (isEditMode && initialData) {
-			// Images
+			// Images from heroSlides
 			const loadedSlots: ImageSlot[] = [null, null, null];
-			if (initialData.hero_bg && Array.isArray(initialData.hero_bg)) {
-				initialData.hero_bg.forEach((url: string, idx: number) => {
-					if (idx < 3) loadedSlots[idx] = { type: "url", url };
+			if (initialData.heroSlides && Array.isArray(initialData.heroSlides)) {
+				initialData.heroSlides.forEach((slide: HeroSlide, idx: number) => {
+					if (idx < 3 && slide.bg_image) {
+						loadedSlots[idx] = { type: "url", url: slide.bg_image };
+					}
 				});
 			}
 			setSlots(loadedSlots);
+
+			// Build per-slide hero fields from heroSlides
+			const heroFields: Record<string, string> = {};
+			if (initialData.heroSlides) {
+				initialData.heroSlides.forEach((slide: HeroSlide, idx: number) => {
+					if (idx < 3) {
+						heroFields[`hero_title_${idx}`] = slide.title_id || "";
+						heroFields[`hero_desc_${idx}`] = slide.desc_id || "";
+						heroFields[`hero_title_en_${idx}`] = slide.title_en || "";
+						heroFields[`hero_desc_en_${idx}`] = slide.desc_en || "";
+					}
+				});
+			}
 
 			// Fields Mapping
 			const flatData = {
@@ -316,37 +382,42 @@ export default function HomePageForm({
 						initialData.contact_phone.map((s: string) => ({ value: s }))
 						: [{ value: "" }],
 
+				// Per-slide hero fields
+				...heroFields,
+
 				// ID Content
-				hero_title: initialData.homePageId?.hero_title || "",
-				hero_desc: initialData.homePageId?.hero_desc || "",
 				about_us_title: initialData.homePageId?.about_us_title || "",
 				about_us_desc: initialData.homePageId?.about_us_desc || "",
+				about_us_badge: initialData.homePageId?.about_us_badge || "",
 				services_title: initialData.homePageId?.services_title || "",
 				services_desc: initialData.homePageId?.services_desc || "",
+				services_badge: initialData.homePageId?.services_badge || "",
 				news_title: initialData.homePageId?.news_title || "",
 				news_desc: initialData.homePageId?.news_desc || "",
+				news_badge: initialData.homePageId?.news_badge || "",
 				partners_title: initialData.homePageId?.partners_title || "",
 				partners_desc: initialData.homePageId?.partners_desc || "",
+				partners_badge: initialData.homePageId?.partners_badge || "",
 				contact_title: initialData.homePageId?.contact_title || "",
 				contact_desc: initialData.homePageId?.contact_desc || "",
 
 				// EN Content
-				hero_title_en: initialData.homePageEn?.hero_title || "",
-				hero_desc_en: initialData.homePageEn?.hero_desc || "",
 				about_us_title_en: initialData.homePageEn?.about_us_title || "",
 				about_us_desc_en: initialData.homePageEn?.about_us_desc || "",
+				about_us_badge_en: initialData.homePageEn?.about_us_badge || "",
 				services_title_en: initialData.homePageEn?.services_title || "",
 				services_desc_en: initialData.homePageEn?.services_desc || "",
+				services_badge_en: initialData.homePageEn?.services_badge || "",
 				news_title_en: initialData.homePageEn?.news_title || "",
 				news_desc_en: initialData.homePageEn?.news_desc || "",
+				news_badge_en: initialData.homePageEn?.news_badge || "",
 				partners_title_en: initialData.homePageEn?.partners_title || "",
 				partners_desc_en: initialData.homePageEn?.partners_desc || "",
+				partners_badge_en: initialData.homePageEn?.partners_badge || "",
 				contact_title_en: initialData.homePageEn?.contact_title || "",
 				contact_desc_en: initialData.homePageEn?.contact_desc || "",
 			};
 
-			// Reset form with new values
-			// Note: We need to cast this because 'reset' expects the inferred values
 			form.reset(flatData as any);
 		}
 	}, [initialData, isEditMode, form]);
@@ -394,31 +465,51 @@ export default function HomePageForm({
 		let fieldMapping;
 		if (lang == "en") {
 			fieldMapping = [
-				{ src: "hero_title", dest: "hero_title_en" },
-				{ src: "hero_desc", dest: "hero_desc_en" },
+				// Per-slide hero fields
+				{ src: "hero_title_0", dest: "hero_title_en_0" },
+				{ src: "hero_desc_0", dest: "hero_desc_en_0" },
+				{ src: "hero_title_1", dest: "hero_title_en_1" },
+				{ src: "hero_desc_1", dest: "hero_desc_en_1" },
+				{ src: "hero_title_2", dest: "hero_title_en_2" },
+				{ src: "hero_desc_2", dest: "hero_desc_en_2" },
+				// Other sections
 				{ src: "about_us_title", dest: "about_us_title_en" },
 				{ src: "about_us_desc", dest: "about_us_desc_en" },
+				{ src: "about_us_badge", dest: "about_us_badge_en" },
 				{ src: "services_title", dest: "services_title_en" },
 				{ src: "services_desc", dest: "services_desc_en" },
+				{ src: "services_badge", dest: "services_badge_en" },
 				{ src: "news_title", dest: "news_title_en" },
 				{ src: "news_desc", dest: "news_desc_en" },
+				{ src: "news_badge", dest: "news_badge_en" },
 				{ src: "partners_title", dest: "partners_title_en" },
 				{ src: "partners_desc", dest: "partners_desc_en" },
+				{ src: "partners_badge", dest: "partners_badge_en" },
 				{ src: "contact_title", dest: "contact_title_en" },
 				{ src: "contact_desc", dest: "contact_desc_en" },
 			];
 		} else {
 			fieldMapping = [
-				{ src: "hero_title_en", dest: "hero_title" },
-				{ src: "hero_desc_en", dest: "hero_desc" },
+				// Per-slide hero fields
+				{ src: "hero_title_en_0", dest: "hero_title_0" },
+				{ src: "hero_desc_en_0", dest: "hero_desc_0" },
+				{ src: "hero_title_en_1", dest: "hero_title_1" },
+				{ src: "hero_desc_en_1", dest: "hero_desc_1" },
+				{ src: "hero_title_en_2", dest: "hero_title_2" },
+				{ src: "hero_desc_en_2", dest: "hero_desc_2" },
+				// Other sections
 				{ src: "about_us_title_en", dest: "about_us_title" },
 				{ src: "about_us_desc_en", dest: "about_us_desc" },
+				{ src: "about_us_badge_en", dest: "about_us_badge" },
 				{ src: "services_title_en", dest: "services_title" },
 				{ src: "services_desc_en", dest: "services_desc" },
+				{ src: "services_badge_en", dest: "services_badge" },
 				{ src: "news_title_en", dest: "news_title" },
 				{ src: "news_desc_en", dest: "news_desc" },
+				{ src: "news_badge_en", dest: "news_badge" },
 				{ src: "partners_title_en", dest: "partners_title" },
 				{ src: "partners_desc_en", dest: "partners_desc" },
+				{ src: "partners_badge_en", dest: "partners_badge" },
 				{ src: "contact_title_en", dest: "contact_title" },
 				{ src: "contact_desc_en", dest: "contact_desc" },
 			];
@@ -427,6 +518,16 @@ export default function HomePageForm({
 		const textsToTranslate = fieldMapping.map(
 			(f) => form.getValues(f.src as any) || "",
 		);
+
+        // Validate source fields
+        const sourceKeys = fieldMapping.map((f) => f.src);
+        const isValid = await form.trigger(sourceKeys as any);
+
+        if (!isValid) {
+            toast.error("Please fill in required fields first");
+            setIsTranslating(false);
+            return;
+        }
 
 		if (textsToTranslate.every((t) => t.trim() === "")) {
 			toast.error("Please fill Indonesian content first.");
@@ -495,7 +596,6 @@ export default function HomePageForm({
 	};
 
 	// --- SUBMIT ---
-	// Gunakan tipe FormValues di sini agar data ter-type dengan benar
 	const onSubmit = async (data: FormValues) => {
 		if (slots.some((s) => s === null))
 			return toast.error("Please fill all 3 image slots.");
@@ -603,7 +703,10 @@ export default function HomePageForm({
 				</div>
 			</div>
 
-			<form onSubmit={form.handleSubmit(onSubmit)}>
+			<form onSubmit={form.handleSubmit(onSubmit, () => {
+                toast.error(`Please fill all field`);
+            })} className="space-y-8">
+				{/* === HERO SLIDES (Carousel) === */}
 				<Card className="mb-8 border-slate-200 shadow-sm">
 					<CardHeader className="pb-4 border-b border-slate-100 bg-slate-50/50">
 						<CardTitle className="flex items-center gap-2 text-base text-slate-800">
@@ -611,13 +714,14 @@ export default function HomePageForm({
 							Slots)
 						</CardTitle>
 						<CardDescription>
-							Upload 3 landscape images (16:9). Click image to change.
+							Upload 3 landscape images (16:9). Each slide has its own title & description.
 						</CardDescription>
 					</CardHeader>
 					<CardContent className="pt-6">
 						<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 							{[0, 1, 2].map((idx) => (
-								<div key={idx} className="space-y-2">
+								<div key={idx} className="space-y-3">
+									{/* Image Upload */}
 									<div className="flex justify-between items-center px-1">
 										<Label className="text-xs font-semibold text-slate-500">
 											SLOT {idx + 1}
@@ -679,14 +783,47 @@ export default function HomePageForm({
 											</label>
 										}
 									</div>
+
+									{/* Per-slide Title & Desc (ID) */}
+									<div className="space-y-2 border-t pt-3">
+										<Label className="text-[10px] font-semibold text-red-500 uppercase tracking-wide">🇮🇩 ID</Label>
+										<FormInput
+											id={`hero_title_${idx}`}
+											label="Title"
+											register={form.register}
+											placeholder={`Slide ${idx + 1} title (ID)`}
+										/>
+										<FormInput
+											id={`hero_desc_${idx}`}
+											label="Description"
+											textarea
+											register={form.register}
+											placeholder={`Slide ${idx + 1} description (ID)`}
+										/>
+									</div>
+
+									{/* Per-slide Title & Desc (EN) */}
+									<div className="space-y-2 border-t pt-3">
+										<Label className="text-[10px] font-semibold text-blue-500 uppercase tracking-wide">🇺🇸 EN</Label>
+										<FormInput
+											id={`hero_title_en_${idx}`}
+											label="Title"
+											register={form.register}
+											placeholder={`Slide ${idx + 1} title (EN)`}
+										/>
+										<FormInput
+											id={`hero_desc_en_${idx}`}
+											label="Description"
+											textarea
+											register={form.register}
+											placeholder={`Slide ${idx + 1} description (EN)`}
+                    />
+									</div>
 								</div>
 							))}
 						</div>
 					</CardContent>
 				</Card>
-
-				{/* ... (BAGIAN UI INPUT GRID, SAMA SEPERTI SEBELUMNYA) ... */}
-				{/* Paste ulang Grid Input dan Tabs di sini (tidak ada perubahan pada bagian JSX) */}
 
 				<div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 					{/* === LEFT COLUMN: GLOBAL CONFIGS (Col-Span-4) === */}
@@ -868,24 +1005,7 @@ export default function HomePageForm({
 								value="id"
 								className="space-y-6 animate-in fade-in-50"
 							>
-								{/* 1. HERO */}
-								<SectionGroup title="Hero Section" icon={LayoutTemplate}>
-									<FormInput
-										id="hero_title"
-										label="Hero Title"
-										register={form.register}
-										error={errors.hero_title}
-									/>
-									<FormInput
-										id="hero_desc"
-										label="Hero Description"
-										textarea
-										register={form.register}
-										error={errors.hero_desc}
-									/>
-								</SectionGroup>
-
-								{/* 2. ABOUT US */}
+								{/* 1. ABOUT US */}
 								<SectionGroup title="About Us Section" icon={Info}>
 									<FormInput
 										id="about_us_title"
@@ -900,9 +1020,15 @@ export default function HomePageForm({
 										register={form.register}
 										error={errors.about_us_desc}
 									/>
+									<FormInput
+										id="about_us_badge"
+										label="About Badge"
+										register={form.register}
+										error={errors.about_us_badge}
+									/>
 								</SectionGroup>
 
-								{/* 3. SERVICES */}
+								{/* 2. SERVICES */}
 								<SectionGroup title="Services Section" icon={Briefcase}>
 									<FormInput
 										id="services_title"
@@ -917,9 +1043,15 @@ export default function HomePageForm({
 										register={form.register}
 										error={errors.services_desc}
 									/>
+									<FormInput
+										id="services_badge"
+										label="Services Badge"
+										register={form.register}
+										error={errors.services_badge}
+									/>
 								</SectionGroup>
 
-								{/* 4. NEWS */}
+								{/* 3. NEWS */}
 								<SectionGroup title="News Section" icon={Newspaper}>
 									<FormInput
 										id="news_title"
@@ -934,9 +1066,15 @@ export default function HomePageForm({
 										register={form.register}
 										error={errors.news_desc}
 									/>
+									<FormInput
+										id="news_badge"
+										label="News Badge"
+										register={form.register}
+										error={errors.news_badge}
+									/>
 								</SectionGroup>
 
-								{/* 5. PARTNERS */}
+								{/* 4. PARTNERS */}
 								<SectionGroup title="Partners Section" icon={Handshake}>
 									<FormInput
 										id="partners_title"
@@ -951,9 +1089,15 @@ export default function HomePageForm({
 										register={form.register}
 										error={errors.partners_desc}
 									/>
+									<FormInput
+										id="partners_badge"
+										label="Partners Badge"
+										register={form.register}
+										error={errors.partners_badge}
+									/>
 								</SectionGroup>
 
-								{/* 6. CONTACT FOOTER */}
+								{/* 5. CONTACT FOOTER */}
 								<SectionGroup title="Contact Footer Section" icon={Mail}>
 									<FormInput
 										id="contact_title"
@@ -976,24 +1120,7 @@ export default function HomePageForm({
 								value="en"
 								className="space-y-6 animate-in fade-in-50"
 							>
-								{/* 1. HERO */}
-								<SectionGroup title="Hero Section (EN)" icon={LayoutTemplate}>
-									<FormInput
-										id="hero_title_en"
-										label="Hero Title"
-										register={form.register}
-										error={errors.hero_title_en}
-									/>
-									<FormInput
-										id="hero_desc_en"
-										label="Hero Description"
-										textarea
-										register={form.register}
-										error={errors.hero_desc_en}
-									/>
-								</SectionGroup>
-
-								{/* 2. ABOUT US */}
+								{/* 1. ABOUT US */}
 								<SectionGroup title="About Us Section (EN)" icon={Info}>
 									<FormInput
 										id="about_us_title_en"
@@ -1008,9 +1135,15 @@ export default function HomePageForm({
 										register={form.register}
 										error={errors.about_us_desc_en}
 									/>
+									<FormInput
+										id="about_us_badge_en"
+										label="About Badge"
+										register={form.register}
+										error={errors.about_us_badge_en}
+									/>
 								</SectionGroup>
 
-								{/* 3. SERVICES */}
+								{/* 2. SERVICES */}
 								<SectionGroup title="Services Section (EN)" icon={Briefcase}>
 									<FormInput
 										id="services_title_en"
@@ -1025,9 +1158,15 @@ export default function HomePageForm({
 										register={form.register}
 										error={errors.services_desc_en}
 									/>
+									<FormInput
+										id="services_badge_en"
+										label="Services Badge"
+										register={form.register}
+										error={errors.services_badge_en}
+									/>
 								</SectionGroup>
 
-								{/* 4. NEWS */}
+								{/* 3. NEWS */}
 								<SectionGroup title="News Section (EN)" icon={Newspaper}>
 									<FormInput
 										id="news_title_en"
@@ -1042,9 +1181,15 @@ export default function HomePageForm({
 										register={form.register}
 										error={errors.news_desc_en}
 									/>
+									<FormInput
+										id="news_badge_en"
+										label="News Badge"
+										register={form.register}
+										error={errors.news_badge_en}
+									/>
 								</SectionGroup>
 
-								{/* 5. PARTNERS */}
+								{/* 4. PARTNERS */}
 								<SectionGroup title="Partners Section (EN)" icon={Handshake}>
 									<FormInput
 										id="partners_title_en"
@@ -1059,9 +1204,15 @@ export default function HomePageForm({
 										register={form.register}
 										error={errors.partners_desc_en}
 									/>
+									<FormInput
+										id="partners_badge_en"
+										label="Partners Badge"
+										register={form.register}
+										error={errors.partners_badge_en}
+									/>
 								</SectionGroup>
 
-								{/* 6. CONTACT FOOTER */}
+								{/* 5. CONTACT FOOTER */}
 								<SectionGroup title="Contact Footer Section (EN)" icon={Mail}>
 									<FormInput
 										id="contact_title_en"
@@ -1083,16 +1234,17 @@ export default function HomePageForm({
 				</div>
 
 				{/* SUBMIT */}
-				<div className="flex justify-end pt-8 pb-10 border-t mt-8">
+				<div className="flex justify-end gap-2 fixed bottom-6 right-6 z-50">
 					<Button
-						type="submit"
-						size="lg"
+						type="button"
+						variant="secondary"
+						onClick={() => router.back()}
 						disabled={isLoading}
-						className="w-full md:w-auto min-w-50"
 					>
-						{isLoading ?
-							<Loader2 className="animate-spin mr-2" />
-							: null}
+						Cancel
+					</Button>
+					<Button type="submit" disabled={isLoading}>
+						{isLoading && <Loader2 className="animate-spin mr-2 h-4 w-4" />}
 						{isEditMode ? "Save Changes" : "Create Home Page"}
 					</Button>
 				</div>
