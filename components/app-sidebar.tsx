@@ -60,6 +60,11 @@ const data = {
 					icon: CastIcon,
 				},
 				{
+					title: "Service Items",
+					url: "/admin/content/services-items",
+					icon: CastIcon,
+				},
+				{
 					title: "Car Gallery",
 					url: "/admin/content/car-gallery",
 					icon: BookPlus,

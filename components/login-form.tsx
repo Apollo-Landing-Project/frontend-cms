@@ -22,31 +22,39 @@ export function LoginForm({
 	...props
 }: React.ComponentProps<"div">) {
 	const [email, setEmail] = useState("");
+	const [isSubmit, setIsSubmit] = useState<boolean>(false);
 	const [password, setPassword] = useState("");
 	const router = useRouter();
 	const setUser = useUserStore((state) => state.setUser);
 
 	const handleSubmit = async () => {
-		const res = await fetch(`${envConfig.apiUrl}/auth/login`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			credentials: "include",
-			body: JSON.stringify({
-				email,
-				password,
-			}),
-		});
+		setIsSubmit(true);
+		try {
+			const res = await fetch(`${envConfig.apiUrl}/auth/login`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				body: JSON.stringify({
+					email,
+					password,
+				}),
+			});
 
-		const json = await res.json();
-		if (!res.ok) {
-			toast.error(json.message);
-		} else {
-			toast.success(json.message);
-			setUser(json.data);
+			const json = await res.json();
+			if (!res.ok) {
+				toast.error(json.message);
+			} else {
+				toast.success(json.message);
+				setUser(json.data);
 
-			router.push("/admin");
+				router.push("/admin");
+			}
+		} catch (error: any) {
+			toast.error(error.message);
+		} finally {
+			setIsSubmit(true);
 		}
 	};
 
@@ -89,7 +97,13 @@ export function LoginForm({
 							</Field>
 
 							<Field>
-								<Button type="submit">Login</Button>
+								<Button
+									type="submit"
+									disabled={isSubmit}
+									className="cursor-pointer"
+								>
+									Login
+								</Button>
 							</Field>
 						</FieldGroup>
 					</form>
