@@ -88,63 +88,63 @@ const stringListSchema = z.array(
 const formSchema = z.object({
 	hero_title: z.string().min(1, "Required"),
 	hero_desc: z.string().min(1, "Required"),
-    hero_badge: z.string().min(1, "Required"),
+	hero_badge: z.string().min(1, "Required"),
 
 	vision_title: z.string().min(1, "Required"),
 	vision_desc: z.string().min(1, "Required"),
-    vision_badge: z.string().min(1, "Required"),
+	vision_badge: z.string().min(1, "Required"),
 	vision_quote: z.string().optional(),
 	vision_list: stringListSchema,
 
 	mission_title: z.string().min(1, "Required"),
 	mission_desc: z.string().min(1, "Required"),
-    mission_badge: z.string().min(1, "Required"),
+	mission_badge: z.string().min(1, "Required"),
 	mission_quote: z.string().optional(),
 	mission_list: stringListSchema,
 
 	history_title: z.string().min(1, "Required"),
 	history_desc: z.string().min(1, "Required"),
-    history_badge: z.string().min(1, "Required"),
+	history_badge: z.string().min(1, "Required"),
 
 	company_structure_title: z.string().min(1, "Required"),
 	company_structure_desc: z.string().min(1, "Required"),
-    company_structure_badge: z.string().min(1, "Required"),
+	company_structure_badge: z.string().min(1, "Required"),
 	boc_title: z.string().min(1, "Required"),
 	boc_desc: z.string().min(1, "Required"),
-    boc_badge: z.string().min(1, "Required"),
+	boc_badge: z.string().min(1, "Required"),
 	bod_title: z.string().min(1, "Required"),
 	bod_desc: z.string().min(1, "Required"),
-    bod_badge: z.string().min(1, "Required"),
+	bod_badge: z.string().min(1, "Required"),
 
 	hero_title_en: z.string().min(1, "Required"),
 	hero_desc_en: z.string().min(1, "Required"),
-    hero_badge_en: z.string().min(1, "Required"),
+	hero_badge_en: z.string().min(1, "Required"),
 
 	vision_title_en: z.string().min(1, "Required"),
 	vision_desc_en: z.string().min(1, "Required"),
-    vision_badge_en: z.string().min(1, "Required"),
+	vision_badge_en: z.string().min(1, "Required"),
 	vision_quote_en: z.string().optional(),
 	vision_list_en: stringListSchema,
 
 	mission_title_en: z.string().min(1, "Required"),
 	mission_desc_en: z.string().min(1, "Required"),
-    mission_badge_en: z.string().min(1, "Required"),
+	mission_badge_en: z.string().min(1, "Required"),
 	mission_quote_en: z.string().optional(),
 	mission_list_en: stringListSchema,
 
 	history_title_en: z.string().min(1, "Required"),
 	history_desc_en: z.string().min(1, "Required"),
-    history_badge_en: z.string().min(1, "Required"),
+	history_badge_en: z.string().min(1, "Required"),
 
 	company_structure_title_en: z.string().min(1, "Required"),
 	company_structure_desc_en: z.string().min(1, "Required"),
-    company_structure_badge_en: z.string().min(1, "Required"),
+	company_structure_badge_en: z.string().min(1, "Required"),
 	boc_title_en: z.string().min(1, "Required"),
 	boc_desc_en: z.string().min(1, "Required"),
-    boc_badge_en: z.string().min(1, "Required"),
+	boc_badge_en: z.string().min(1, "Required"),
 	bod_title_en: z.string().min(1, "Required"),
 	bod_desc_en: z.string().min(1, "Required"),
-    bod_badge_en: z.string().min(1, "Required"),
+	bod_badge_en: z.string().min(1, "Required"),
 
 	governance_list: z.array(governanceItemSchema),
 	company_structure_list: z.array(structureItemSchema),
@@ -426,65 +426,65 @@ export default function AboutUsForm({
 			reset({
 				hero_title: initialData.aboutUsPageId?.hero_title || "",
 				hero_desc: initialData.aboutUsPageId?.hero_desc || "",
-                hero_badge: initialData.aboutUsPageId?.hero_badge || "",
+				hero_badge: initialData.aboutUsPageId?.hero_badge || "",
 				vision_title: initialData.aboutUsPageId?.vision_title || "",
 				vision_desc: initialData.aboutUsPageId?.vision_desc || "",
-                vision_badge: initialData.aboutUsPageId?.vision_badge || "",
+				vision_badge: initialData.aboutUsPageId?.vision_badge || "",
 				vision_quote: initialData.aboutUsPageId?.vision_quote || "",
 				vision_list: toObjArr(initialData.aboutUsPageId?.vision_list),
 
 				mission_title: initialData.aboutUsPageId?.mission_title || "",
 				mission_desc: initialData.aboutUsPageId?.mission_desc || "",
-                mission_badge: initialData.aboutUsPageId?.mission_badge || "",
+				mission_badge: initialData.aboutUsPageId?.mission_badge || "",
 				mission_quote: initialData.aboutUsPageId?.mission_quote || "",
 				mission_list: toObjArr(initialData.aboutUsPageId?.mission_list),
 
 				history_title: initialData.aboutUsPageId?.history_title || "",
 				history_desc: initialData.aboutUsPageId?.history_desc || "",
-                history_badge: initialData.aboutUsPageId?.history_badge || "",
+				history_badge: initialData.aboutUsPageId?.history_badge || "",
 				company_structure_title:
 					initialData.aboutUsPageId?.company_structure_title || "",
 				company_structure_desc:
 					initialData.aboutUsPageId?.company_structure_desc || "",
-                company_structure_badge:
+				company_structure_badge:
 					initialData.aboutUsPageId?.company_structure_badge || "",
 				boc_title: initialData.aboutUsPageId?.boc_title || "",
 				boc_desc: initialData.aboutUsPageId?.boc_desc || "",
-                boc_badge: initialData.aboutUsPageId?.boc_badge || "",
+				boc_badge: initialData.aboutUsPageId?.boc_badge || "",
 				bod_title: initialData.aboutUsPageId?.bod_title || "",
 				bod_desc: initialData.aboutUsPageId?.bod_desc || "",
-                bod_badge: initialData.aboutUsPageId?.bod_badge || "",
+				bod_badge: initialData.aboutUsPageId?.bod_badge || "",
 
 				hero_title_en: initialData.aboutUsPageEn?.hero_title || "",
 				hero_desc_en: initialData.aboutUsPageEn?.hero_desc || "",
-                hero_badge_en: initialData.aboutUsPageEn?.hero_badge || "",
+				hero_badge_en: initialData.aboutUsPageEn?.hero_badge || "",
 				vision_title_en: initialData.aboutUsPageEn?.vision_title || "",
 				vision_desc_en: initialData.aboutUsPageEn?.vision_desc || "",
-                vision_badge_en: initialData.aboutUsPageEn?.vision_badge || "",
+				vision_badge_en: initialData.aboutUsPageEn?.vision_badge || "",
 				vision_quote_en: initialData.aboutUsPageEn?.vision_quote || "",
 				vision_list_en: toObjArr(initialData.aboutUsPageEn?.vision_list),
 
 				mission_title_en: initialData.aboutUsPageEn?.mission_title || "",
 				mission_desc_en: initialData.aboutUsPageEn?.mission_desc || "",
-                mission_badge_en: initialData.aboutUsPageEn?.mission_badge || "",
+				mission_badge_en: initialData.aboutUsPageEn?.mission_badge || "",
 				mission_quote_en: initialData.aboutUsPageEn?.mission_quote || "",
 				mission_list_en: toObjArr(initialData.aboutUsPageEn?.mission_list),
 
 				history_title_en: initialData.aboutUsPageEn?.history_title || "",
 				history_desc_en: initialData.aboutUsPageEn?.history_desc || "",
-                history_badge_en: initialData.aboutUsPageEn?.history_badge || "",
+				history_badge_en: initialData.aboutUsPageEn?.history_badge || "",
 				company_structure_title_en:
 					initialData.aboutUsPageEn?.company_structure_title || "",
 				company_structure_desc_en:
 					initialData.aboutUsPageEn?.company_structure_desc || "",
-                company_structure_badge_en:
+				company_structure_badge_en:
 					initialData.aboutUsPageEn?.company_structure_badge || "",
 				boc_title_en: initialData.aboutUsPageEn?.boc_title || "",
 				boc_desc_en: initialData.aboutUsPageEn?.boc_desc || "",
-                boc_badge_en: initialData.aboutUsPageEn?.boc_badge || "",
+				boc_badge_en: initialData.aboutUsPageEn?.boc_badge || "",
 				bod_title_en: initialData.aboutUsPageEn?.bod_title || "",
 				bod_desc_en: initialData.aboutUsPageEn?.bod_desc || "",
-                bod_badge_en: initialData.aboutUsPageEn?.bod_badge || "",
+				bod_badge_en: initialData.aboutUsPageEn?.bod_badge || "",
 
 				governance_list: initialData.governances || [],
 				company_structure_list: initialData.companyStructures || [],
@@ -553,65 +553,65 @@ export default function AboutUsForm({
 			simpleFields = [
 				{ src: "hero_title", dest: "hero_title_en" },
 				{ src: "hero_desc", dest: "hero_desc_en" },
-                { src: "hero_badge", dest: "hero_badge_en" },
+				{ src: "hero_badge", dest: "hero_badge_en" },
 				{ src: "vision_title", dest: "vision_title_en" },
 				{ src: "vision_desc", dest: "vision_desc_en" },
-                { src: "vision_badge", dest: "vision_badge_en" },
+				{ src: "vision_badge", dest: "vision_badge_en" },
 				{ src: "vision_quote", dest: "vision_quote_en" },
 				{ src: "mission_title", dest: "mission_title_en" },
 				{ src: "mission_desc", dest: "mission_desc_en" },
-                { src: "mission_badge", dest: "mission_badge_en" },
+				{ src: "mission_badge", dest: "mission_badge_en" },
 				{ src: "mission_quote", dest: "mission_quote_en" },
 				{ src: "history_title", dest: "history_title_en" },
 				{ src: "history_desc", dest: "history_desc_en" },
-                { src: "history_badge", dest: "history_badge_en" },
+				{ src: "history_badge", dest: "history_badge_en" },
 				{ src: "company_structure_title", dest: "company_structure_title_en" },
 				{ src: "company_structure_desc", dest: "company_structure_desc_en" },
-                { src: "company_structure_badge", dest: "company_structure_badge_en" },
+				{ src: "company_structure_badge", dest: "company_structure_badge_en" },
 				{ src: "boc_title", dest: "boc_title_en" },
 				{ src: "boc_desc", dest: "boc_desc_en" },
-                { src: "boc_badge", dest: "boc_badge_en" },
+				{ src: "boc_badge", dest: "boc_badge_en" },
 				{ src: "bod_title", dest: "bod_title_en" },
 				{ src: "bod_desc", dest: "bod_desc_en" },
-                { src: "bod_badge", dest: "bod_badge_en" },
+				{ src: "bod_badge", dest: "bod_badge_en" },
 			];
 		} else {
 			simpleFields = [
 				{ src: "hero_title_en", dest: "hero_title" },
 				{ src: "hero_desc_en", dest: "hero_desc" },
-                { src: "hero_badge_en", dest: "hero_badge" },
+				{ src: "hero_badge_en", dest: "hero_badge" },
 				{ src: "vision_title_en", dest: "vision_title" },
 				{ src: "vision_desc_en", dest: "vision_desc" },
-                { src: "vision_badge_en", dest: "vision_badge" },
+				{ src: "vision_badge_en", dest: "vision_badge" },
 				{ src: "vision_quote_en", dest: "vision_quote" },
 				{ src: "mission_title_en", dest: "mission_title" },
 				{ src: "mission_desc_en", dest: "mission_desc" },
-                { src: "mission_badge_en", dest: "mission_badge" },
+				{ src: "mission_badge_en", dest: "mission_badge" },
 				{ src: "mission_quote_en", dest: "mission_quote" },
 				{ src: "history_title_en", dest: "history_title" },
 				{ src: "history_desc_en", dest: "history_desc" },
-                { src: "history_badge_en", dest: "history_badge" },
+				{ src: "history_badge_en", dest: "history_badge" },
 				{ src: "company_structure_title_en", dest: "company_structure_title" },
 				{ src: "company_structure_desc_en", dest: "company_structure_desc" },
-                { src: "company_structure_badge_en", dest: "company_structure_badge" },
+				{ src: "company_structure_badge_en", dest: "company_structure_badge" },
 				{ src: "boc_title_en", dest: "boc_title" },
 				{ src: "boc_desc_en", dest: "boc_desc" },
-                { src: "boc_badge_en", dest: "boc_badge" },
+				{ src: "boc_badge_en", dest: "boc_badge" },
 				{ src: "bod_title_en", dest: "bod_title" },
 				{ src: "bod_desc_en", dest: "bod_desc" },
-                { src: "bod_badge_en", dest: "bod_badge" },
+				{ src: "bod_badge_en", dest: "bod_badge" },
 			];
 		}
 
-        // Validate source fields
-        const sourceKeys = simpleFields.map((f) => f.src);
-        const isValid = await form.trigger(sourceKeys as any);
+		// Validate source fields
+		const sourceKeys = simpleFields.map((f) => f.src);
+		const isValid = await form.trigger(sourceKeys as any);
 
-        if (!isValid) {
-            toast.error("Please fill in required fields first");
-            setIsTranslating(false);
-            return;
-        }
+		if (!isValid) {
+			toast.error("Please fill in required fields first");
+			setIsTranslating(false);
+			return;
+		}
 
 		const getListText = (key: string) => {
 			const arr = getValues(key as any);
@@ -633,6 +633,10 @@ export default function AboutUsForm({
 			for (let i = 0; i < totalChunks; i++) {
 				const chunk = allTexts.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
 				if (!chunk.length) continue;
+
+				// Add timeout for each fetch
+				await new Promise((resolve) => setTimeout(resolve, 500));
+
 				const res = await fetch(
 					`${process.env.NEXT_PUBLIC_API_URL}/translate`,
 					{
@@ -787,10 +791,13 @@ export default function AboutUsForm({
 				</div>
 			</div>
 
-			<form onSubmit={form.handleSubmit(onSubmit, (errors) => {
-                toast.error("Please check the form for errors");
-                console.error("Form Errors:", errors);
-            })} className="space-y-8">
+			<form
+				onSubmit={form.handleSubmit(onSubmit, (errors) => {
+					toast.error("Please check the form for errors");
+					console.error("Form Errors:", errors);
+				})}
+				className="space-y-8"
+			>
 				{/* === GLOBAL IMAGES === */}
 				<Card>
 					<CardHeader className="bg-slate-50/50 border-b pb-4">
@@ -912,7 +919,7 @@ export default function AboutUsForm({
 									register={register}
 									error={errors.hero_desc}
 								/>
-                                <FormInput
+								<FormInput
 									id="hero_badge"
 									label="Badge"
 									register={register}
@@ -942,7 +949,7 @@ export default function AboutUsForm({
 										register={register}
 										error={errors.vision_desc}
 									/>
-                                    <FormInput
+									<FormInput
 										id="vision_badge"
 										label="Badge"
 										register={register}
@@ -984,7 +991,7 @@ export default function AboutUsForm({
 										register={register}
 										error={errors.mission_desc}
 									/>
-                                    <FormInput
+									<FormInput
 										id="mission_badge"
 										label="Badge"
 										register={register}
@@ -1030,7 +1037,7 @@ export default function AboutUsForm({
 										register={register}
 										error={errors.history_desc}
 									/>
-                                    <FormInput
+									<FormInput
 										id="history_badge"
 										label="Badge"
 										register={register}
@@ -1052,7 +1059,7 @@ export default function AboutUsForm({
 										register={register}
 										error={errors.company_structure_desc}
 									/>
-                                    <FormInput
+									<FormInput
 										id="company_structure_badge"
 										label="Badge"
 										register={register}
@@ -1074,7 +1081,7 @@ export default function AboutUsForm({
 										register={register}
 										error={errors.boc_desc}
 									/>
-                                    <FormInput
+									<FormInput
 										id="boc_badge"
 										label="Badge"
 										register={register}
@@ -1096,7 +1103,7 @@ export default function AboutUsForm({
 										register={register}
 										error={errors.bod_desc}
 									/>
-                                    <FormInput
+									<FormInput
 										id="bod_badge"
 										label="Badge"
 										register={register}
@@ -1127,7 +1134,7 @@ export default function AboutUsForm({
 									register={register}
 									error={errors.hero_desc_en}
 								/>
-                                <FormInput
+								<FormInput
 									id="hero_badge_en"
 									label="Badge (EN)"
 									register={register}
@@ -1157,7 +1164,7 @@ export default function AboutUsForm({
 										register={register}
 										error={errors.vision_desc_en}
 									/>
-                                    <FormInput
+									<FormInput
 										id="vision_badge_en"
 										label="Badge (EN)"
 										register={register}
@@ -1198,7 +1205,7 @@ export default function AboutUsForm({
 										register={register}
 										error={errors.mission_desc_en}
 									/>
-                                    <FormInput
+									<FormInput
 										id="mission_badge_en"
 										label="Badge (EN)"
 										register={register}
@@ -1242,7 +1249,7 @@ export default function AboutUsForm({
 										register={register}
 										error={errors.history_desc_en}
 									/>
-                                    <FormInput
+									<FormInput
 										id="history_badge_en"
 										label="Badge (EN)"
 										register={register}
@@ -1263,7 +1270,7 @@ export default function AboutUsForm({
 										register={register}
 										error={errors.company_structure_desc_en}
 									/>
-                                    <FormInput
+									<FormInput
 										id="company_structure_badge_en"
 										label="Badge (EN)"
 										register={register}
@@ -1284,7 +1291,7 @@ export default function AboutUsForm({
 										register={register}
 										error={errors.boc_desc_en}
 									/>
-                                    <FormInput
+									<FormInput
 										id="boc_badge_en"
 										label="Badge (EN)"
 										register={register}
@@ -1305,7 +1312,7 @@ export default function AboutUsForm({
 										register={register}
 										error={errors.bod_desc_en}
 									/>
-                                    <FormInput
+									<FormInput
 										id="bod_badge_en"
 										label="Badge (EN)"
 										register={register}

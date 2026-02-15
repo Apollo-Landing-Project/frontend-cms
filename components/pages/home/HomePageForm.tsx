@@ -1235,14 +1235,6 @@ export default function HomePageForm({
 
 				{/* SUBMIT */}
 				<div className="flex justify-end gap-2 fixed bottom-6 right-6 z-50">
-					<Button
-						type="button"
-						variant="secondary"
-						onClick={() => router.back()}
-						disabled={isLoading}
-					>
-						Cancel
-					</Button>
 					<Button type="submit" disabled={isLoading}>
 						{isLoading && <Loader2 className="animate-spin mr-2 h-4 w-4" />}
 						{isEditMode ? "Save Changes" : "Create Home Page"}

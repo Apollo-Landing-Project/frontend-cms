@@ -33,14 +33,16 @@ import { cn } from "@/lib/utils";
 const formSchema = z.object({
 	// ID
 	title: z.string().min(1, "Title (ID) required"),
-    badge: z.string().min(1, "Badge (ID) required"),
+	badge: z.string().min(1, "Badge (ID) required"),
 	desc: z.string().min(1, "Description (ID) required"),
 	quote: z.string().optional(),
 	location: z.string().min(1, "Location (ID) required"),
+	desc_sort: z.string().min(1, "Description Sort (ID) is required"),
 
 	// EN
 	title_en: z.string().min(1, "Title (EN) required"),
-    badge_en: z.string().min(1, "Badge (EN) required"),
+	badge_en: z.string().min(1, "Badge (EN) required"),
+	desc_sort_en: z.string().min(1, "Description Sort (EN) is required"),
 	desc_en: z.string().min(1, "Description (EN) required"),
 	quote_en: z.string().optional(),
 	location_en: z.string().min(1, "Location (EN) required"),
@@ -139,13 +141,15 @@ export default function ServiceItemForm({
 			contact: [{ value: "" }],
 			email: [{ value: "" }],
 			title: "",
-            badge: "",
+			desc_sort: "",
+			badge: "",
 			desc: "",
 			quote: "",
 			location: "",
 			title_en: "",
-            badge_en: "",
+			badge_en: "",
 			desc_en: "",
+			desc_sort_en: "",
 			quote_en: "",
 			location_en: "",
 		},
@@ -182,16 +186,17 @@ export default function ServiceItemForm({
 
 			reset({
 				title: initialData.serviceId?.title || "",
-                badge: initialData.serviceId?.badge || "",
+				badge: initialData.serviceId?.badge || "",
 				desc: initialData.serviceId?.desc || "",
+				desc_sort: initialData.serviceId?.desc_sort || "",
 				quote: initialData.serviceId?.quote || "",
 				location: initialData.serviceId?.location || "",
 				title_en: initialData.serviceEn?.title || "",
-                badge_en: initialData.serviceEn?.badge || "",
+				badge_en: initialData.serviceEn?.badge || "",
 				desc_en: initialData.serviceEn?.desc || "",
+				desc_sort_en: initialData.serviceEn?.desc_sort || "",
 				quote_en: initialData.serviceEn?.quote || "",
 				location_en: initialData.serviceEn?.location || "",
-
 				contact: mapArray(initialData.serviceId?.contact),
 				email: mapArray(initialData.serviceId?.email),
 			});
@@ -229,32 +234,34 @@ export default function ServiceItemForm({
 		if (lang == "en") {
 			fieldMapping = [
 				{ src: "title", dest: "title_en" },
-                { src: "badge", dest: "badge_en" },
+				{ src: "badge", dest: "badge_en" },
 				{ src: "desc", dest: "desc_en" },
+				{ src: "desc_sort", dest: "desc_sort_en" },
 				{ src: "quote", dest: "quote_en" },
 				{ src: "location", dest: "location_en" },
 			];
 		} else {
 			fieldMapping = [
 				{ src: "title_en", dest: "title" },
-                { src: "badge_en", dest: "badge" },
+				{ src: "badge_en", dest: "badge" },
 				{ src: "desc_en", dest: "desc" },
+				{ src: "desc_sort_en", dest: "desc_sort" },
 				{ src: "quote_en", dest: "quote" },
 				{ src: "location_en", dest: "location" },
-            ];
-        }
+			];
+		}
 
-        // Validate source fields
-        const sourceKeys = fieldMapping.map((f) => f.src);
-        const isValid = await form.trigger(sourceKeys as any);
+		// Validate source fields
+		const sourceKeys = fieldMapping.map((f) => f.src);
+		const isValid = await form.trigger(sourceKeys as any);
 
-        if (!isValid) {
-            toast.error("Please fill in required fields first");
-            setIsTranslating(false);
-            return;
-        }
+		if (!isValid) {
+			toast.error("Please fill in required fields first");
+			setIsTranslating(false);
+			return;
+		}
 
-        const textsToTranslate = fieldMapping.map(
+		const textsToTranslate = fieldMapping.map(
 			(f) => getValues(f.src as any) || "",
 		);
 
@@ -397,14 +404,17 @@ export default function ServiceItemForm({
 				</div>
 			</div>
 
-			<form onSubmit={handleSubmit(onSubmit, (errors) => {
-                toast.error("Please check the form for errors");
-                console.error("Form Errors:", errors);
-            })} className="space-y-8">
-                {/* 1. IMAGE UPLOAD */}
+			<form
+				onSubmit={handleSubmit(onSubmit, (errors) => {
+					toast.error("Please check the form for errors");
+					console.error("Form Errors:", errors);
+				})}
+				className="space-y-8"
+			>
+				{/* 1. IMAGE UPLOAD */}
 				<Card>
 					<CardHeader>
-						<CardTitle>Service Image (16:9)</CardTitle>
+						<CardTitle>Service Image (392:325)</CardTitle>
 					</CardHeader>
 					<CardContent>
 						<div className="max-w-md">
@@ -413,7 +423,7 @@ export default function ServiceItemForm({
 								preview={preview}
 								onFileSelect={initiateCrop}
 								isNew={!!file}
-								aspectClass="aspect-video"
+								aspectClass="aspect-[392/325]"
 							/>
 						</div>
 					</CardContent>
@@ -541,7 +551,7 @@ export default function ServiceItemForm({
 									register={register}
 									error={errors.title}
 								/>
-                                <FormInput
+								<FormInput
 									id="badge"
 									label="Service Badge"
 									register={register}
@@ -550,6 +560,13 @@ export default function ServiceItemForm({
 								<FormInput
 									id="desc"
 									label="Description"
+									textarea
+									register={register}
+									error={errors.desc}
+								/>
+								<FormInput
+									id="desc_sort"
+									label="Description Sort"
 									textarea
 									register={register}
 									error={errors.desc}
@@ -598,7 +615,7 @@ export default function ServiceItemForm({
 									register={register}
 									error={errors.title_en}
 								/>
-                                <FormInput
+								<FormInput
 									id="badge_en"
 									label="Service Badge (EN)"
 									register={register}
@@ -607,6 +624,13 @@ export default function ServiceItemForm({
 								<FormInput
 									id="desc_en"
 									label="Description"
+									textarea
+									register={register}
+									error={errors.desc_en}
+								/>
+								<FormInput
+									id="desc_sort_en"
+									label="Description Sort"
 									textarea
 									register={register}
 									error={errors.desc_en}
@@ -669,7 +693,7 @@ export default function ServiceItemForm({
 				setCrop={setCrop}
 				zoom={zoom}
 				setZoom={setZoom}
-				aspect={16 / 9}
+				aspect={392 / 325}
 				setCroppedAreaPixels={setCroppedArea}
 			/>
 		</div>
