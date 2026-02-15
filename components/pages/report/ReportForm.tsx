@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
+import Tiptap from "@/components/ui/Tiptap";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,13 +36,16 @@ import { cn } from "@/lib/utils";
 
 // --- VALIDATION SCHEMA ---
 const formSchema = z.object({
-    title_id: z.string().optional(),
-    title_en: z.string().optional(),
-    description_id: z.string().optional(),
-    description_en: z.string().optional(),
+    title_id: z.string().min(1, "Title (ID) is required"),
+    title_en: z.string().min(1, "Title (EN) is required"),
+    description_id: z.string().min(1, "Description (ID) is required"),
+    description_en: z.string().min(1, "Description (EN) is required"),
     publish_at: z.date({ message: "Publish date is required" }),
     is_publish: z.boolean().default(true),
     reportCategoryId: z.string().min(1, "Category is required"),
+    news_author: z.string().optional(),
+    news_image: z.any().optional(),
+    news_author_image: z.any().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -51,6 +55,18 @@ interface ReportFormProps {
     isEditMode?: boolean;
 }
 
+const getErrorMessage = (error: any): string | null => {
+	if (!error) return null;
+	if (typeof error.message === "string") return error.message;
+	if (typeof error === "object") {
+		for (const key in error) {
+			const msg = getErrorMessage(error[key]);
+			if (msg) return msg;
+		}
+	}
+	return null;
+};
+
 export default function ReportForm({
     initialData,
     isEditMode = false,
@@ -58,6 +74,10 @@ export default function ReportForm({
     const [isLoading, setIsLoading] = useState(false);
     const [categories, setCategories] = useState<any[]>([]);
     const [file, setFile] = useState<File | null>(null);
+    const [newsImageFile, setNewsImageFile] = useState<File | null>(null);
+    const [newsAuthorImageFile, setNewsAuthorImageFile] = useState<File | null>(null);
+    const [newsContentId, setNewsContentId] = useState("");
+    const [newsContentEn, setNewsContentEn] = useState("");
     const [existingFileUrl, setExistingFileUrl] = useState<string | null>(null);
     const router = useRouter();
 
@@ -112,12 +132,31 @@ export default function ReportForm({
             if (initialData.file_url) {
                 setExistingFileUrl(initialData.file_url);
             }
+             // News Content Prefill (if exists)
+             if (initialData.newsNews?.newsNewsId?.content) {
+                setNewsContentId(initialData.newsNews.newsNewsId.content);
+             }
+             if (initialData.newsNews?.newsNewsEn?.content) {
+                setNewsContentEn(initialData.newsNews.newsNewsEn.content);
+             }
         }
     }, [initialData, isEditMode, setValue]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             setFile(e.target.files[0]);
+        }
+    };
+
+    const handleNewsImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setNewsImageFile(e.target.files[0]);
+        }
+    };
+
+    const handleNewsAuthorImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setNewsAuthorImageFile(e.target.files[0]);
         }
     };
 
@@ -144,6 +183,19 @@ export default function ReportForm({
         } else {
             formData.append("file_status", "keep");
         }
+
+        if (newsImageFile) {
+            formData.append("news_image", newsImageFile);
+        }
+        if (newsAuthorImageFile) {
+            formData.append("news_author_image", newsAuthorImageFile);
+        }
+        if (newsAuthorImageFile) {
+            formData.append("news_author_image", newsAuthorImageFile);
+        }
+        formData.append("news_author", data.news_author || "");
+        formData.append("news_content_id", newsContentId);
+        formData.append("news_content_en", newsContentEn);
 
         try {
             const url =
@@ -174,7 +226,14 @@ export default function ReportForm({
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit as any)} className="space-y-8 max-w-4xl">
+        <form onSubmit={handleSubmit(onSubmit as any, (errors) => {
+            const msg = getErrorMessage(errors);
+            if (msg) {
+                toast.error(msg);
+            } else {
+                toast.error("Please check the form for errors");
+            }
+        })} className="space-y-8 max-w-4xl">
             <Card>
                 <CardContent className="p-6 space-y-6">
                     {/* ROW 1: Category & Date */}
@@ -314,6 +373,65 @@ export default function ReportForm({
                                 id="desc_en"
                                 placeholder="Report description..."
                                 {...register("description_en")}
+                            />
+                        </div>
+                    </div>
+
+                    {/* News Configuration */}
+                    <div className="space-y-4 pt-4 border-t">
+                        <h3 className="font-semibold text-slate-900">News Configuration (Linked NewsNews)</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                <Label htmlFor="news_author">News Author</Label>
+                                <Input
+                                    id="news_author"
+                                    placeholder="Author Name"
+                                    {...register("news_author")}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label>News Image</Label>
+                                <Input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleNewsImageChange}
+                                />
+                                {newsImageFile && (
+                                    <p className="text-sm text-green-600">Selected: {newsImageFile.name}</p>
+                                )}
+                            </div>
+                            <div className="space-y-2">
+                                <Label>News Author Image</Label>
+                                <Input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleNewsAuthorImageChange}
+                                />
+                                {newsAuthorImageFile && (
+                                    <p className="text-sm text-green-600">Selected: {newsAuthorImageFile.name}</p>
+                                )}
+                            </div>
+                        </div>
+
+                         {/* News Content ID */}
+                         <div className="space-y-2 mt-4">
+                            <Label>News Content (ID)</Label>
+                            <Tiptap
+                                content={newsContentId}
+                                onChange={setNewsContentId}
+                                placeholder="News content (Bahasa Indonesia)..."
+                                enableImageUpload={true}
+                            />
+                        </div>
+
+                        {/* News Content EN */}
+                        <div className="space-y-2 mt-4">
+                            <Label>News Content (EN)</Label>
+                            <Tiptap
+                                content={newsContentEn}
+                                onChange={setNewsContentEn}
+                                placeholder="News content (English)..."
+                                enableImageUpload={true}
                             />
                         </div>
                     </div>

@@ -144,6 +144,18 @@ const SectionGroup = ({
     </div>
 );
 
+const getErrorMessage = (error: any): string | null => {
+	if (!error) return null;
+	if (typeof error.message === "string") return error.message;
+	if (typeof error === "object") {
+		for (const key in error) {
+			const msg = getErrorMessage(error[key]);
+			if (msg) return msg;
+		}
+	}
+	return null;
+};
+
 // --- 3. MAIN COMPONENT ---
 interface InvestorPageFormProps {
     initialData?: any;
@@ -439,7 +451,12 @@ export default function InvestorPageForm({
             </div>
 
             <form onSubmit={form.handleSubmit(onSubmit, (errors) => {
-                toast.error("Please check the form for errors");
+                const msg = getErrorMessage(errors);
+                if (msg) {
+                    toast.error(msg);
+                } else {
+                    toast.error("Please check the form for errors");
+                }
                 console.error("Form Errors:", errors);
             })} className="space-y-8">
                 {/* === SECTION 1: HERO IMAGE (Global) === */}

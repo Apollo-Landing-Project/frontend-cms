@@ -66,9 +66,9 @@ import { useRouter } from "next/navigation";
 
 const governanceItemSchema = z.object({
 	id: z.string().optional(),
-	name: z.string().min(1, "Name required"),
+	name: z.string().min(1, "Name is required"),
 	position: z.enum(["BOD", "BOC"]),
-	position_desc: z.string().min(1, "Position desc required"),
+	position_desc: z.string().min(1, "Position description is required"),
 	photo_image: z.string().optional().nullable(),
 
 	photo_index: z.number().optional(),
@@ -76,7 +76,7 @@ const governanceItemSchema = z.object({
 
 const structureItemSchema = z.object({
 	id: z.string().optional(),
-	name: z.string().min(1, "Name required"),
+	name: z.string().min(1, "Name is required"),
 	icon_image: z.string().optional().nullable(),
 	icon_index: z.number().optional(),
 });
@@ -86,65 +86,65 @@ const stringListSchema = z.array(
 );
 
 const formSchema = z.object({
-	hero_title: z.string().min(1, "Required"),
-	hero_desc: z.string().min(1, "Required"),
-	hero_badge: z.string().min(1, "Required"),
+	hero_title: z.string().min(1, "Hero Title (ID) is required"),
+	hero_desc: z.string().min(1, "Hero Description (ID) is required"),
+	hero_badge: z.string().min(1, "Hero Badge (ID) is required"),
 
-	vision_title: z.string().min(1, "Required"),
-	vision_desc: z.string().min(1, "Required"),
-	vision_badge: z.string().min(1, "Required"),
+	vision_title: z.string().min(1, "Vision Title (ID) is required"),
+	vision_desc: z.string().min(1, "Vision Description (ID) is required"),
+	vision_badge: z.string().min(1, "Vision Badge (ID) is required"),
 	vision_quote: z.string().optional(),
 	vision_list: stringListSchema,
 
-	mission_title: z.string().min(1, "Required"),
-	mission_desc: z.string().min(1, "Required"),
-	mission_badge: z.string().min(1, "Required"),
+	mission_title: z.string().min(1, "Mission Title (ID) is required"),
+	mission_desc: z.string().min(1, "Mission Description (ID) is required"),
+	mission_badge: z.string().min(1, "Mission Badge (ID) is required"),
 	mission_quote: z.string().optional(),
 	mission_list: stringListSchema,
 
-	history_title: z.string().min(1, "Required"),
-	history_desc: z.string().min(1, "Required"),
-	history_badge: z.string().min(1, "Required"),
+	history_title: z.string().min(1, "History Title (ID) is required"),
+	history_desc: z.string().min(1, "History Description (ID) is required"),
+	history_badge: z.string().min(1, "History Badge (ID) is required"),
 
-	company_structure_title: z.string().min(1, "Required"),
-	company_structure_desc: z.string().min(1, "Required"),
-	company_structure_badge: z.string().min(1, "Required"),
-	boc_title: z.string().min(1, "Required"),
-	boc_desc: z.string().min(1, "Required"),
-	boc_badge: z.string().min(1, "Required"),
-	bod_title: z.string().min(1, "Required"),
-	bod_desc: z.string().min(1, "Required"),
-	bod_badge: z.string().min(1, "Required"),
+	company_structure_title: z.string().min(1, "Company Structure Title (ID) is required"),
+	company_structure_desc: z.string().min(1, "Company Structure Description (ID) is required"),
+	company_structure_badge: z.string().min(1, "Company Structure Badge (ID) is required"),
+	boc_title: z.string().min(1, "BoC Title (ID) is required"),
+	boc_desc: z.string().min(1, "BoC Description (ID) is required"),
+	boc_badge: z.string().min(1, "BoC Badge (ID) is required"),
+	bod_title: z.string().min(1, "BoD Title (ID) is required"),
+	bod_desc: z.string().min(1, "BoD Description (ID) is required"),
+	bod_badge: z.string().min(1, "BoD Badge (ID) is required"),
 
-	hero_title_en: z.string().min(1, "Required"),
-	hero_desc_en: z.string().min(1, "Required"),
-	hero_badge_en: z.string().min(1, "Required"),
+	hero_title_en: z.string().min(1, "Hero Title (EN) is required"),
+	hero_desc_en: z.string().min(1, "Hero Description (EN) is required"),
+	hero_badge_en: z.string().min(1, "Hero Badge (EN) is required"),
 
-	vision_title_en: z.string().min(1, "Required"),
-	vision_desc_en: z.string().min(1, "Required"),
-	vision_badge_en: z.string().min(1, "Required"),
+	vision_title_en: z.string().min(1, "Vision Title (EN) is required"),
+	vision_desc_en: z.string().min(1, "Vision Description (EN) is required"),
+	vision_badge_en: z.string().min(1, "Vision Badge (EN) is required"),
 	vision_quote_en: z.string().optional(),
 	vision_list_en: stringListSchema,
 
-	mission_title_en: z.string().min(1, "Required"),
-	mission_desc_en: z.string().min(1, "Required"),
-	mission_badge_en: z.string().min(1, "Required"),
+	mission_title_en: z.string().min(1, "Mission Title (EN) is required"),
+	mission_desc_en: z.string().min(1, "Mission Description (EN) is required"),
+	mission_badge_en: z.string().min(1, "Mission Badge (EN) is required"),
 	mission_quote_en: z.string().optional(),
 	mission_list_en: stringListSchema,
 
-	history_title_en: z.string().min(1, "Required"),
-	history_desc_en: z.string().min(1, "Required"),
-	history_badge_en: z.string().min(1, "Required"),
+	history_title_en: z.string().min(1, "History Title (EN) is required"),
+	history_desc_en: z.string().min(1, "History Description (EN) is required"),
+	history_badge_en: z.string().min(1, "History Badge (EN) is required"),
 
-	company_structure_title_en: z.string().min(1, "Required"),
-	company_structure_desc_en: z.string().min(1, "Required"),
-	company_structure_badge_en: z.string().min(1, "Required"),
-	boc_title_en: z.string().min(1, "Required"),
-	boc_desc_en: z.string().min(1, "Required"),
-	boc_badge_en: z.string().min(1, "Required"),
-	bod_title_en: z.string().min(1, "Required"),
-	bod_desc_en: z.string().min(1, "Required"),
-	bod_badge_en: z.string().min(1, "Required"),
+	company_structure_title_en: z.string().min(1, "Company Structure Title (EN) is required"),
+	company_structure_desc_en: z.string().min(1, "Company Structure Description (EN) is required"),
+	company_structure_badge_en: z.string().min(1, "Company Structure Badge (EN) is required"),
+	boc_title_en: z.string().min(1, "BoC Title (EN) is required"),
+	boc_desc_en: z.string().min(1, "BoC Description (EN) is required"),
+	boc_badge_en: z.string().min(1, "BoC Badge (EN) is required"),
+	bod_title_en: z.string().min(1, "BoD Title (EN) is required"),
+	bod_desc_en: z.string().min(1, "BoD Description (EN) is required"),
+	bod_badge_en: z.string().min(1, "BoD Badge (EN) is required"),
 
 	governance_list: z.array(governanceItemSchema),
 	company_structure_list: z.array(structureItemSchema),
@@ -330,6 +330,18 @@ const FormInput = ({
 		)}
 	</div>
 );
+
+const getErrorMessage = (error: any): string | null => {
+	if (!error) return null;
+	if (typeof error.message === "string") return error.message;
+	if (typeof error === "object") {
+		for (const key in error) {
+			const msg = getErrorMessage(error[key]);
+			if (msg) return msg;
+		}
+	}
+	return null;
+};
 
 interface AboutUsFormProps {
 	initialData?: any;
@@ -793,7 +805,12 @@ export default function AboutUsForm({
 
 			<form
 				onSubmit={form.handleSubmit(onSubmit, (errors) => {
-					toast.error("Please check the form for errors");
+					const msg = getErrorMessage(errors);
+					if (msg) {
+						toast.error(msg);
+					} else {
+						toast.error("Please check the form for errors");
+					}
 					console.error("Form Errors:", errors);
 				})}
 				className="space-y-8"

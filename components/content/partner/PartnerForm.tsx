@@ -33,6 +33,18 @@ interface PartnerFormProps {
 	isEditMode?: boolean;
 }
 
+const getErrorMessage = (error: any): string | null => {
+	if (!error) return null;
+	if (typeof error.message === "string") return error.message;
+	if (typeof error === "object") {
+		for (const key in error) {
+			const msg = getErrorMessage(error[key]);
+			if (msg) return msg;
+		}
+	}
+	return null;
+};
+
 export default function PartnerForm({
 	initialData,
 	isEditMode,
@@ -129,7 +141,12 @@ export default function PartnerForm({
 
 			<form
 				onSubmit={handleSubmit(onSubmit, (errors) => {
-					toast.error("Please check the form for errors");
+					const msg = getErrorMessage(errors);
+					if (msg) {
+						toast.error(msg);
+					} else {
+						toast.error("Please check the form for errors");
+					}
 				})}
 				className="space-y-8"
 			>
@@ -151,15 +168,11 @@ export default function PartnerForm({
 								preview={preview}
 								onFileSelect={handleFileSelect}
 								isNew={!!file}
-								// PERBAIKAN DISINI:
-								// 1. h-[300px]: Memberikan tinggi area preview yang cukup (agar tidak gepeng).
-								// 2. object-contain: Memastikan gambar TIDAK DITARIK paksa.
-								//    Gambar akan menyesuaikan diri di dalam kotak tanpa merusak rasio aslinya.
 								aspectClass={
 									preview ? "w-full h-[300px] object-contain" : "aspect-video"
 								}
 							/>
-						</div>
+                        </div>
 					</CardContent>
 				</Card>
 

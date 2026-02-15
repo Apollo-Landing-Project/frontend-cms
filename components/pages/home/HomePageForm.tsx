@@ -104,7 +104,7 @@ const baseSchema = z.object({
 	about_us_countries: z.coerce.number().min(0),
 	about_us_brands: z.coerce.number().min(0),
 	contact_email: z.array(z.object({ value: z.string().email("Invalid email") })),
-	contact_phone: z.array(z.object({ value: z.string().min(1, "Required") })),
+	contact_phone: z.array(z.object({ value: z.string().min(1, "Phone number is required") })),
 	contact_link_map: z.string().url().or(z.literal("")),
 	contact_address: z.string().min(1, "Address is required"),
 
@@ -125,36 +125,36 @@ const baseSchema = z.object({
 	hero_desc_en_2: z.string().optional(),
 
 	// ID - other sections
-	about_us_title: z.string().min(1, "Required"),
-	about_us_desc: z.string().min(1, "Required"),
-	about_us_badge: z.string().min(1, "Required"),
-	services_title: z.string().min(1, "Required"),
-	services_desc: z.string().min(1, "Required"),
-	services_badge: z.string().min(1, "Required"),
-	news_title: z.string().min(1, "Required"),
-	news_desc: z.string().min(1, "Required"),
-	news_badge: z.string().min(1, "Required"),
-	partners_title: z.string().min(1, "Required"),
-	partners_desc: z.string().min(1, "Required"),
-	partners_badge: z.string().min(1, "Required"),
-	contact_title: z.string().min(1, "Required"),
-	contact_desc: z.string().min(1, "Required"),
+	about_us_title: z.string().min(1, "About Us Title (ID) is required"),
+	about_us_desc: z.string().min(1, "About Us Description (ID) is required"),
+	about_us_badge: z.string().min(1, "About Us Badge (ID) is required"),
+	services_title: z.string().min(1, "Services Title (ID) is required"),
+	services_desc: z.string().min(1, "Services Description (ID) is required"),
+	services_badge: z.string().min(1, "Services Badge (ID) is required"),
+	news_title: z.string().min(1, "News Title (ID) is required"),
+	news_desc: z.string().min(1, "News Description (ID) is required"),
+	news_badge: z.string().min(1, "News Badge (ID) is required"),
+	partners_title: z.string().min(1, "Partners Title (ID) is required"),
+	partners_desc: z.string().min(1, "Partners Description (ID) is required"),
+	partners_badge: z.string().min(1, "Partners Badge (ID) is required"),
+	contact_title: z.string().min(1, "Contact Title (ID) is required"),
+	contact_desc: z.string().min(1, "Contact Description (ID) is required"),
 
 	// EN - other sections
-	about_us_title_en: z.string().min(1, "Required"),
-	about_us_desc_en: z.string().min(1, "Required"),
-	about_us_badge_en: z.string().min(1, "Required"),
-	services_title_en: z.string().min(1, "Required"),
-	services_desc_en: z.string().min(1, "Required"),
-	services_badge_en: z.string().min(1, "Required"),
-	news_title_en: z.string().min(1, "Required"),
-	news_desc_en: z.string().min(1, "Required"),
-	news_badge_en: z.string().min(1, "Required"),
-	partners_title_en: z.string().min(1, "Required"),
-	partners_desc_en: z.string().min(1, "Required"),
-	partners_badge_en: z.string().min(1, "Required"),
-	contact_title_en: z.string().min(1, "Required"),
-	contact_desc_en: z.string().min(1, "Required"),
+	about_us_title_en: z.string().min(1, "About Us Title (EN) is required"),
+	about_us_desc_en: z.string().min(1, "About Us Description (EN) is required"),
+	about_us_badge_en: z.string().min(1, "About Us Badge (EN) is required"),
+	services_title_en: z.string().min(1, "Services Title (EN) is required"),
+	services_desc_en: z.string().min(1, "Services Description (EN) is required"),
+	services_badge_en: z.string().min(1, "Services Badge (EN) is required"),
+	news_title_en: z.string().min(1, "News Title (EN) is required"),
+	news_desc_en: z.string().min(1, "News Description (EN) is required"),
+	news_badge_en: z.string().min(1, "News Badge (EN) is required"),
+	partners_title_en: z.string().min(1, "Partners Title (EN) is required"),
+	partners_desc_en: z.string().min(1, "Partners Description (EN) is required"),
+	partners_badge_en: z.string().min(1, "Partners Badge (EN) is required"),
+	contact_title_en: z.string().min(1, "Contact Title (EN) is required"),
+	contact_desc_en: z.string().min(1, "Contact Description (EN) is required"),
 });
 
 type FormValues = z.infer<typeof baseSchema>;
@@ -235,6 +235,18 @@ const SectionGroup = ({
 );
 
 // --- 4. MAIN COMPONENT ---
+
+const getErrorMessage = (error: any): string | null => {
+	if (!error) return null;
+	if (typeof error.message === "string") return error.message;
+	if (typeof error === "object") {
+		for (const key in error) {
+			const msg = getErrorMessage(error[key]);
+			if (msg) return msg;
+		}
+	}
+	return null;
+};
 
 interface HomePageFormProps {
 	initialData?: HomePageData;
@@ -703,9 +715,14 @@ export default function HomePageForm({
 				</div>
 			</div>
 
-			<form onSubmit={form.handleSubmit(onSubmit, () => {
-                toast.error(`Please fill all field`);
-            })} className="space-y-8">
+			<form onSubmit={form.handleSubmit(onSubmit, (errors) => {
+				const msg = getErrorMessage(errors);
+				if (msg) {
+					toast.error(msg);
+				} else {
+					toast.error("Please fill all fields");
+				}
+			})} className="space-y-8">
 				{/* === HERO SLIDES (Carousel) === */}
 				<Card className="mb-8 border-slate-200 shadow-sm">
 					<CardHeader className="pb-4 border-b border-slate-100 bg-slate-50/50">

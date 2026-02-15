@@ -139,6 +139,18 @@ const SectionGroup = ({
 	</div>
 );
 
+const getErrorMessage = (error: any): string | null => {
+	if (!error) return null;
+	if (typeof error.message === "string") return error.message;
+	if (typeof error === "object") {
+		for (const key in error) {
+			const msg = getErrorMessage(error[key]);
+			if (msg) return msg;
+		}
+	}
+	return null;
+};
+
 // --- 3. MAIN COMPONENT ---
 interface NewsPageFormProps {
 	initialData?: any;
@@ -407,7 +419,15 @@ export default function NewsPageForm({
 				</div>
 			</div>
 
-			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+			<form onSubmit={form.handleSubmit(onSubmit, (errors) => {
+				const msg = getErrorMessage(errors);
+				if (msg) {
+					toast.error(msg);
+				} else {
+					toast.error("Please check the form for errors");
+				}
+				console.error("Form Errors:", errors);
+			})} className="space-y-8">
 				{/* === SECTION 1: HERO IMAGE (Global) === */}
 				<Card>
 					<CardHeader className="bg-slate-50/50 border-b pb-4">

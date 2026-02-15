@@ -36,6 +36,18 @@ const categorySchema = z.object({
 
 type CategoryFormValues = z.infer<typeof categorySchema>;
 
+const getErrorMessage = (error: any): string | null => {
+	if (!error) return null;
+	if (typeof error.message === "string") return error.message;
+	if (typeof error === "object") {
+		for (const key in error) {
+			const msg = getErrorMessage(error[key]);
+			if (msg) return msg;
+		}
+	}
+	return null;
+};
+
 export default function ReportCategoryList() {
     const [data, setData] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -232,7 +244,12 @@ export default function ReportCategoryList() {
                             {isEditMode ? "Edit Category" : "Add Category"}
                         </DialogTitle>
                     </DialogHeader>
-                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                    <form onSubmit={handleSubmit(onSubmit, (errors) => {
+                         const msg = getErrorMessage(errors);
+                        if (msg) {
+                            toast.error(msg);
+                        }
+                    })} className="space-y-4">
                         <div className="space-y-2">
                             <Label htmlFor="name">Name</Label>
                             <Input

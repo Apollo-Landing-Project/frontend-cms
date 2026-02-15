@@ -30,6 +30,18 @@ interface CarGalleryFormProps {
 	isEditMode?: boolean;
 }
 
+const getErrorMessage = (error: any): string | null => {
+	if (!error) return null;
+	if (typeof error.message === "string") return error.message;
+	if (typeof error === "object") {
+		for (const key in error) {
+			const msg = getErrorMessage(error[key]);
+			if (msg) return msg;
+		}
+	}
+	return null;
+};
+
 export default function CarGalleryForm({
 	initialData,
 	isEditMode,
@@ -232,7 +244,14 @@ export default function CarGalleryForm({
 				</div>
 			</div>
 
-			<form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+			<form onSubmit={handleSubmit(onSubmit, (errors) => {
+				const msg = getErrorMessage(errors);
+				if (msg) {
+					toast.error(msg);
+				} else {
+					toast.error("Please check the form for errors");
+				}
+			})} className="space-y-8">
 				{/* 1. IMAGE (16:9 Landscape) */}
 				<Card>
 					<CardHeader>
