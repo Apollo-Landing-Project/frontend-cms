@@ -632,8 +632,11 @@ export default function AboutUsForm({
 
 		const texts = simpleFields.map((f) => getValues(f.src as any) || "");
 
-		const visionListSrc = getListText("vision_list");
-		const missionListSrc = getListText("mission_list");
+		const visionListKey = lang === "en" ? "vision_list" : "vision_list_en";
+		const missionListKey = lang === "en" ? "mission_list" : "mission_list_en";
+
+		const visionListSrc = getListText(visionListKey);
+		const missionListSrc = getListText(missionListKey);
 
 		const allTexts = [...texts, visionListSrc, missionListSrc];
 
@@ -669,17 +672,20 @@ export default function AboutUsForm({
 					setValue(field.dest as any, results[i], { shouldValidate: true });
 			});
 
+			const visionListDest = lang === "en" ? "vision_list_en" : "vision_list";
+			const missionListDest = lang === "en" ? "mission_list_en" : "mission_list";
+
 			const visionListRes = results[texts.length];
 			if (visionListRes)
 				setValue(
-					"vision_list_en",
+					visionListDest as any,
 					visionListRes.split("\n").map((s) => ({ text: s.trim() })),
 				);
 
 			const missionListRes = results[texts.length + 1];
 			if (missionListRes)
 				setValue(
-					"mission_list_en",
+					missionListDest as any,
 					missionListRes.split("\n").map((s) => ({ text: s.trim() })),
 				);
 

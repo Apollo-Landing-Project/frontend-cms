@@ -95,15 +95,15 @@ const data = {
 		// =========================
 		// SYSTEM
 		// =========================
-		{
-			title: "Pengaturan",
-			url: "/admin/settings",
-			icon: Settings,
-			items: [
-				{ title: "User Management", url: "/admin/settings/users" },
-				{ title: "Role & Akses", url: "/admin/settings/roles" },
-			],
-		},
+		// {
+		// 	title: "Pengaturan",
+		// 	url: "/admin/settings",
+		// 	icon: Settings,
+		// 	items: [
+		// 		{ title: "User Management", url: "/admin/settings/users" },
+		// 		{ title: "Role & Akses", url: "/admin/settings/roles" },
+		// 	],
+		// },
 	],
 
 	projects: [
