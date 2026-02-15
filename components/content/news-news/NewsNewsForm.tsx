@@ -420,7 +420,6 @@ export default function NewsNewsForm({
 									error={errors.description}
 									placeholder="Deskripsi singkat berita..."
 									textarea
-									textarea
 								/>
 								<div className="space-y-1.5">
 									<Label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
@@ -431,14 +430,13 @@ export default function NewsNewsForm({
 										onChange={setContentId}
 										placeholder="Tulis konten berita..."
 										enableImageUpload={true}
-										enableImageUpload={true}
 									/>
 								</div>
 							</CardContent>
 						</Card>
 					</TabsContent>
 
-					{/* CONTENT EN */}
+					{/* CONTENT EN, */}
 					<TabsContent value="en" className="space-y-6 mt-0">
 						<Card>
 							<CardHeader>
@@ -457,7 +455,6 @@ export default function NewsNewsForm({
 									error={errors.description_en}
 									placeholder="Short news description..."
 									textarea
-									textarea
 								/>
 								<div className="space-y-1.5">
 									<Label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
@@ -467,7 +464,6 @@ export default function NewsNewsForm({
 										content={contentEn}
 										onChange={setContentEn}
 										placeholder="Write news content..."
-										enableImageUpload={true}
 										enableImageUpload={true}
 									/>
 								</div>
