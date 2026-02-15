@@ -460,7 +460,7 @@ export default function ServicePageForm({
 				} else {
 					toast.error("Please check the form for errors");
 				}
-				console.error("Form Errors:", errors);
+				
 			})} className="space-y-8">
 				{/* === IMAGES CARD (Top Section) === */}
 				<Card>

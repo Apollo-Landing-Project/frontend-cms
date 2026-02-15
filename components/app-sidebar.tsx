@@ -80,7 +80,7 @@ const data = {
 					icon: Heart,
 				},
 				{
-					title: "Report / Investor",
+					title: "Report",
 					url: "/admin/content/report",
 					icon: TrendingUp,
 				},

@@ -424,7 +424,6 @@ export default function ServiceItemForm({
 					} else {
 						toast.error("Please check the form for errors");
 					}
-					console.error("Form Errors:", errors);
 				})}
 				className="space-y-8"
 			>

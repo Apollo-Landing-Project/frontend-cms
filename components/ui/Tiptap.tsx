@@ -23,6 +23,7 @@ interface TiptapProps {
     placeholder?: string;
     enableImageUpload?: boolean;
     className?: string;
+    disabled?: boolean;
 }
 
 export default function Tiptap({
@@ -31,12 +32,14 @@ export default function Tiptap({
     placeholder = "Write something...",
     enableImageUpload = false,
     className,
+    disabled = false,
 }: TiptapProps) {
     const [uploading, setUploading] = React.useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const editor = useEditor({
         immediatelyRender: false,
+        editable: !disabled,
         extensions: [
             StarterKit,
             Link.configure({
@@ -60,10 +63,27 @@ export default function Tiptap({
         },
         editorProps: {
             attributes: {
-                class: "prose prose-sm max-w-none min-h-[200px] p-4 focus:outline-none",
+                class: cn(
+                    "prose prose-sm max-w-none min-h-[200px] p-4 focus:outline-none",
+                    disabled && "opacity-50 cursor-not-allowed"
+                ),
             },
         },
     });
+
+    // Update editable state if disabled/enabled changes dynamically
+    React.useEffect(() => {
+        if (editor) {
+            editor.setEditable(!disabled);
+        }
+    }, [editor, disabled]);
+
+    // Update editor content when content prop changes
+    React.useEffect(() => {
+        if (editor && content !== editor.getHTML()) {
+            editor.commands.setContent(content);
+        }
+    }, [content, editor]);
 
     const setLink = useCallback(() => {
         if (!editor) return;

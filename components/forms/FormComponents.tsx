@@ -15,6 +15,7 @@ interface ImageUploadFieldProps {
 	isNew?: boolean;
 	aspectClass?: string;
 	note?: string;
+    disabled?: boolean;
 }
 
 export const ImageUploadField = ({
@@ -24,9 +25,10 @@ export const ImageUploadField = ({
 	isNew,
 	aspectClass = "aspect-video",
 	note,
+    disabled = false,
 }: ImageUploadFieldProps) => {
 	return (
-		<div className="space-y-2">
+		<div className={cn("space-y-2", disabled && "opacity-60 pointer-events-none")}>
 			<div className="flex justify-between items-center">
 				<Label className="text-xs font-semibold text-slate-500 uppercase flex items-center gap-2">
 					{label}
@@ -66,6 +68,7 @@ export const ImageUploadField = ({
 									type="file"
 									className="hidden"
 									accept="image/*"
+                                    disabled={disabled}
 									onChange={(e) =>
 										e.target.files?.[0] && onFileSelect(e.target.files[0])
 									}
@@ -86,6 +89,7 @@ export const ImageUploadField = ({
 							type="file"
 							className="hidden"
 							accept="image/*"
+                            disabled={disabled}
 							onChange={(e) =>
 								e.target.files?.[0] && onFileSelect(e.target.files[0])
 							}
