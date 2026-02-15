@@ -296,7 +296,6 @@ export default function NewsNewsForm({
                         variant="ghost" 
                         size="icon" 
                         onClick={() => router.back()}
-                        disabled={isLoading || isTranslating}
                     >
 						<ArrowLeft size={20} />
 					</Button>
@@ -310,7 +309,6 @@ export default function NewsNewsForm({
 						variant="secondary"
 						size="sm"
 						onClick={() => handleAutoTranslate("id")}
-						disabled={isTranslating || isLoading}
 						className="text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200"
 					>
 						{isTranslating ?
@@ -323,7 +321,6 @@ export default function NewsNewsForm({
 						variant="secondary"
 						size="sm"
 						onClick={() => handleAutoTranslate("en")}
-						disabled={isTranslating || isLoading}
 						className="text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200"
 					>
 						{isTranslating ?
@@ -358,7 +355,6 @@ export default function NewsNewsForm({
 								onFileSelect={(f) => initiateCrop(f, "image")}
 								isNew={!!imageFile}
 								aspectClass="aspect-video"
-                                disabled={isLoading || isTranslating}
 							/>
 						</CardContent>
 					</Card>
@@ -375,7 +371,6 @@ export default function NewsNewsForm({
 								register={register("author")}
 								error={errors.author}
 								placeholder="e.g. John Doe"
-                                disabled={isLoading || isTranslating}
 							/>
 							<ImageUploadField
 								label="Author Photo"
@@ -384,7 +379,6 @@ export default function NewsNewsForm({
 								isNew={!!authorImageFile}
 								aspectClass="aspect-square"
 								note="Square (1:1)"
-                                disabled={isLoading || isTranslating}
 							/>
 						</CardContent>
 					</Card>
@@ -419,7 +413,6 @@ export default function NewsNewsForm({
 									register={register("title")}
 									error={errors.title}
 									placeholder="Judul berita..."
-                                    disabled={isLoading || isTranslating}
 								/>
 								<FormInput
 									label="Description"
@@ -427,7 +420,7 @@ export default function NewsNewsForm({
 									error={errors.description}
 									placeholder="Deskripsi singkat berita..."
 									textarea
-                                    disabled={isLoading || isTranslating}
+									textarea
 								/>
 								<div className="space-y-1.5">
 									<Label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
@@ -438,7 +431,7 @@ export default function NewsNewsForm({
 										onChange={setContentId}
 										placeholder="Tulis konten berita..."
 										enableImageUpload={true}
-                                        disabled={isLoading || isTranslating}
+										enableImageUpload={true}
 									/>
 								</div>
 							</CardContent>
@@ -457,7 +450,6 @@ export default function NewsNewsForm({
 									register={register("title_en")}
 									error={errors.title_en}
 									placeholder="News title..."
-                                    disabled={isLoading || isTranslating}
 								/>
 								<FormInput
 									label="Description"
@@ -465,7 +457,7 @@ export default function NewsNewsForm({
 									error={errors.description_en}
 									placeholder="Short news description..."
 									textarea
-                                    disabled={isLoading || isTranslating}
+									textarea
 								/>
 								<div className="space-y-1.5">
 									<Label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
@@ -476,7 +468,7 @@ export default function NewsNewsForm({
 										onChange={setContentEn}
 										placeholder="Write news content..."
 										enableImageUpload={true}
-                                        disabled={isLoading || isTranslating}
+										enableImageUpload={true}
 									/>
 								</div>
 							</CardContent>
@@ -489,7 +481,7 @@ export default function NewsNewsForm({
 					<Button
 						type="submit"
 						size="lg"
-						disabled={isLoading || isTranslating}
+						disabled={isLoading}
 						className="min-w-[150px]"
 					>
 						{isLoading ?
