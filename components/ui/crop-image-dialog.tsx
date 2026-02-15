@@ -28,7 +28,7 @@ export function CropImageDialog({
 				<DialogHeader className="p-4 border-b bg-white">
 					<DialogTitle>Crop Image</DialogTitle>
 				</DialogHeader>
-				<div className="h-100 relative bg-slate-950">
+				<div className="h-[400px] w-full relative bg-slate-950">
 					{imageSrc && (
 						<Cropper
 							image={imageSrc}

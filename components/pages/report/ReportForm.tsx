@@ -148,7 +148,6 @@ export default function ReportForm({
 	// --- PREFILL DATA ---
 	useEffect(() => {
 		if (isEditMode && initialData) {
-			console.log(initialData)
 			setValue("title_id", initialData.title_id || "");
 			setValue("title_en", initialData.title_en || "");
 			setValue("description_id", initialData.description_id || "");
