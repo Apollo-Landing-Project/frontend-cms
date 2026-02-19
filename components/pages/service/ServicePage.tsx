@@ -248,7 +248,7 @@ export default function ServicePageList() {
 									>
 										{item.isActive ? "Published" : "Activate"}
 									</label>
-								</div>
+								</div>f
 
 								{/* Action Buttons */}
 								<div className="flex gap-1">

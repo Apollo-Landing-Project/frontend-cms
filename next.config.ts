@@ -30,6 +30,12 @@ const nextConfig: NextConfig = {
 				hostname: "apolloglobalinteractive.com",
 				pathname: "/**",
 			},
+			{
+				protocol: "https",
+				hostname: "storage.apolloglobalinteractive.com",
+				port: "",
+				pathname: "/**",
+			},
 		],
 	},
 };
