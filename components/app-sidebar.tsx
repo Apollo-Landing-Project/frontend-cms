@@ -41,7 +41,7 @@ const data = {
 				{ title: "Home", url: "/admin/pages/home" },
 				{ title: "About Us", url: "/admin/pages/about-us" },
 				{ title: "Our Service", url: "/admin/pages/service" },
-				{ title: "News", url: "/admin/pages/news" },
+				// { title: "News", url: "/admin/pages/news" },
 				{ title: "Investor", url: "/admin/pages/investor" },
 			],
 		},
@@ -69,16 +69,16 @@ const data = {
 					url: "/admin/content/car-gallery",
 					icon: BookPlus,
 				},
-				{
-					title: "News (Artikel)",
-					url: "/admin/content/news",
-					icon: Newspaper,
-				},
-				{
-					title: "News (CSR)",
-					url: "/admin/content/news/csr",
-					icon: Heart,
-				},
+				// {
+				// 	title: "News (Artikel)",
+				// 	url: "/admin/content/news",
+				// 	icon: Newspaper,
+				// },
+				// {
+				// 	title: "News (CSR)",
+				// 	url: "/admin/content/news/csr",
+				// 	icon: Heart,
+				// },
 				{
 					title: "Report",
 					url: "/admin/content/report",
