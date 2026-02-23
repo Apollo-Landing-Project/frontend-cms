@@ -174,7 +174,7 @@ export default function ReportForm({
                 }
 			}
 		}
-	}, [initialData, isEditMode, setValue]);
+	}, [initialData, isEditMode, setValue, categories]);
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.files && e.target.files[0]) {
