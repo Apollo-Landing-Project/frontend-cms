@@ -96,6 +96,7 @@ export default function ReportForm({
     const [isTranslating, setIsTranslating] = useState(false);
 
 	const [existingFileUrl, setExistingFileUrl] = useState<string | null>(null);
+	const [existingOriginalFilename, setExistingOriginalFilename] = useState<string | null>(null);
     
     // Cropper State
 	const [cropOpen, setCropOpen] = useState(false);
@@ -157,6 +158,9 @@ export default function ReportForm({
 			setValue("reportCategoryId", initialData.reportCategoryId);
 			if (initialData.file_url) {
 				setExistingFileUrl(initialData.file_url);
+			}
+			if (initialData.original_filename) {
+				setExistingOriginalFilename(initialData.original_filename);
 			}
 			// News Content Prefill (if exists)
 			if (initialData.news && initialData.news.length > 0) {
@@ -434,7 +438,7 @@ export default function ReportForm({
 									target="_blank"
 									className="text-blue-600 hover:underline truncate max-w-[300px]"
 								>
-									{existingFileUrl.split("/").pop()}
+									{existingOriginalFilename || existingFileUrl.split("/").pop()}
 								</a>
 							</div>
 						)}

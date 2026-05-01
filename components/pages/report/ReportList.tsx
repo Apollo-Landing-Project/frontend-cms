@@ -167,7 +167,7 @@ export default function ReportList() {
 										<FileText className="text-blue-500 h-8 w-8" />
 										<div className="flex-1 min-w-0">
 											<p className="text-xs font-medium truncate">
-												{item.file_url.split("/").pop()}
+												{item.original_filename || item.file_url.split("/").pop()}
 											</p>
 											<a
 												href={item.file_url}
