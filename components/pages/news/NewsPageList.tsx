@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
+import { useConfirmDialog } from "@/components/providers/confirm-dialog-provider";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
@@ -17,6 +18,7 @@ export default function NewsPageList() {
 	const [data, setData] = useState<any[]>([]);
 	const [loading, setLoading] = useState(true);
 	const router = useRouter();
+	const confirmDialog = useConfirmDialog();
 
 	// --- FETCH DATA ---
 	const fetchData = async () => {
@@ -75,10 +77,12 @@ export default function NewsPageList() {
 
 	// --- DELETE ---
 	const handleDelete = async (id: string) => {
-		if (
-			!confirm("Yakin ingin menghapus? Data dan gambar akan hilang permanen.")
-		)
-			return;
+		const confirmed = await confirmDialog({
+			title: "Hapus news page?",
+			description: "Yakin ingin menghapus? Data dan gambar akan hilang permanen.",
+			confirmText: "Hapus",
+		});
+		if (!confirmed) return;
 
 		try {
 			const res = await fetch(

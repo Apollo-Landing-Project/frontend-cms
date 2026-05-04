@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
+import { useConfirmDialog } from "@/components/providers/confirm-dialog-provider";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
@@ -17,6 +18,7 @@ export default function HomePageList() {
 	const [data, setData] = useState<any[]>([]);
 	const [loading, setLoading] = useState(true);
 	const router = useRouter();
+	const confirmDialog = useConfirmDialog();
 
 	const fetchData = async () => {
 		try {
@@ -63,10 +65,12 @@ export default function HomePageList() {
 	};
 
 	const handleDelete = async (id: string) => {
-		if (
-			!confirm("Yakin ingin menghapus? Data dan gambar akan hilang permanen.")
-		)
-			return;
+		const confirmed = await confirmDialog({
+			title: "Hapus home page?",
+			description: "Yakin ingin menghapus? Data dan gambar akan hilang permanen.",
+			confirmText: "Hapus",
+		});
+		if (!confirmed) return;
 		try {
 			const res = await fetch(
 				`${process.env.NEXT_PUBLIC_API_URL}/page/home/${id}`,

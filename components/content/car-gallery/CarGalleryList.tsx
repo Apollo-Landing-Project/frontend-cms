@@ -9,10 +9,12 @@ import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useConfirmDialog } from "@/components/providers/confirm-dialog-provider";
 
 export default function CarGalleryList() {
 	const [items, setItems] = useState<any[]>([]);
 	const [loading, setLoading] = useState(true);
+	const confirmDialog = useConfirmDialog();
 
 	// --- FETCH DATA ---
 	const fetchData = async () => {
@@ -38,7 +40,12 @@ export default function CarGalleryList() {
 
 	// --- DELETE HANDLER ---
 	const handleDelete = async (id: string) => {
-		if (!confirm("Hapus mobil ini dari galeri?")) return;
+		const confirmed = await confirmDialog({
+			title: "Hapus mobil?",
+			description: "Hapus mobil ini dari galeri?",
+			confirmText: "Hapus",
+		});
+		if (!confirmed) return;
 
 		try {
 			const res = await fetch(

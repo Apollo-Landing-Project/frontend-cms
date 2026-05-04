@@ -9,10 +9,12 @@ import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useConfirmDialog } from "@/components/providers/confirm-dialog-provider";
 
 export default function PartnerList() {
     const [items, setItems] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const confirmDialog = useConfirmDialog();
 
     const fetchData = async () => {
         try {
@@ -34,7 +36,12 @@ export default function PartnerList() {
     }, []);
 
     const handleDelete = async (id: string) => {
-        if (!confirm("Hapus partner ini?")) return;
+        const confirmed = await confirmDialog({
+            title: "Hapus partner?",
+            description: "Hapus partner ini?",
+            confirmText: "Hapus",
+        });
+        if (!confirmed) return;
 
         try {
             const res = await fetch(

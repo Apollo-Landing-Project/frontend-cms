@@ -6,7 +6,6 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import {
     Plus,
-    Loader2,
     Pencil,
     Trash2,
     Eye,
@@ -17,10 +16,12 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useConfirmDialog } from "@/components/providers/confirm-dialog-provider";
 
 export default function NewsCSRList() {
     const [items, setItems] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const confirmDialog = useConfirmDialog();
 
     const fetchData = async () => {
         try {
@@ -42,7 +43,12 @@ export default function NewsCSRList() {
     }, []);
 
     const handleDelete = async (id: string) => {
-        if (!confirm("Delete this CSR news permanently?")) return;
+        const confirmed = await confirmDialog({
+            title: "Delete CSR news?",
+            description: "Delete this CSR news permanently?",
+            confirmText: "Delete",
+        });
+        if (!confirmed) return;
 
         const prevItems = [...items];
         setItems((prev) => prev.filter((item) => item.id !== id));

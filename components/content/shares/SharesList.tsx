@@ -7,10 +7,12 @@ import toast from "react-hot-toast";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { useConfirmDialog } from "@/components/providers/confirm-dialog-provider";
 
 export default function SharesList() {
     const [items, setItems] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const confirmDialog = useConfirmDialog();
 
     const fetchData = async () => {
         try {
@@ -32,7 +34,12 @@ export default function SharesList() {
     }, []);
 
     const handleDelete = async (id: string) => {
-        if (!confirm("Hapus shares ini?")) return;
+        const confirmed = await confirmDialog({
+            title: "Hapus data shares?",
+            description: "Hapus shares ini?",
+            confirmText: "Hapus",
+        });
+        if (!confirmed) return;
 
         try {
             const res = await fetch(
