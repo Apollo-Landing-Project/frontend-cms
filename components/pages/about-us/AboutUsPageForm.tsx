@@ -147,7 +147,9 @@ const formSchema = z.object({
 	bod_badge_en: z.string().min(1, "BoD Badge (EN) is required"),
 
 	governance_list: z.array(governanceItemSchema),
-	company_structure_list: z.array(structureItemSchema),
+	company_structure_list: z
+		.array(structureItemSchema)
+		.max(1, "Only one company structure is allowed"),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -395,7 +397,7 @@ export default function AboutUsForm({
 			vision_list_en: [{ text: "" }],
 			mission_list_en: [{ text: "" }],
 			governance_list: [],
-			company_structure_list: [],
+			company_structure_list: [{ name: "Dealer", icon_image: "" }],
 		},
 	});
 
@@ -416,9 +418,13 @@ export default function AboutUsForm({
 	} = useFieldArray({ control, name: "governance_list" });
 	const {
 		fields: structFields,
-		append: appendStruct,
-		remove: removeStruct,
 	} = useFieldArray({ control, name: "company_structure_list" });
+
+	useEffect(() => {
+		if (structFields.length > 0) {
+			setValue("company_structure_list.0.name", "Dealer");
+		}
+	}, [setValue, structFields.length]);
 
 	useEffect(() => {
 		if (initialData && isEditMode) {
@@ -499,7 +505,10 @@ export default function AboutUsForm({
 				bod_badge_en: initialData.aboutUsPageEn?.bod_badge || "",
 
 				governance_list: initialData.governances || [],
-				company_structure_list: initialData.companyStructures || [],
+				company_structure_list:
+					initialData.companyStructures?.length > 0 ?
+						[initialData.companyStructures[0]]
+					:	[{ name: "Dealer", icon_image: "" }],
 			});
 		}
 	}, [initialData, isEditMode, reset]);
@@ -732,7 +741,9 @@ export default function AboutUsForm({
 		});
 		formData.append("governance_list", JSON.stringify(governancePayload));
 
-		const structurePayload = data.company_structure_list.map((item, index) => {
+		const structurePayload = data.company_structure_list
+			.slice(0, 1)
+			.map((item, index) => {
 			const fileKey = `company_structure_list-${index}`;
 			const file = listFiles[fileKey];
 			let iconIndex = undefined;
@@ -742,8 +753,8 @@ export default function AboutUsForm({
 				iconIndex = formData.getAll("company_structure_icons").length - 1;
 			}
 
-			return { ...item, icon_index: iconIndex };
-		});
+				return { ...item, icon_index: iconIndex };
+			});
 		formData.append("company_structure_list", JSON.stringify(structurePayload));
 
 		const url =
@@ -1469,21 +1480,12 @@ export default function AboutUsForm({
 					<CardHeader className="bg-blue-50/50 border-b pb-4 flex flex-row justify-between items-center">
 						<div>
 							<CardTitle className="flex items-center gap-2 text-base">
-								<Building2 className="w-5 h-5 text-blue-600" /> Company
-								Structure Cards
+								<Building2 className="w-5 h-5 text-blue-600" /> Company Structure
 							</CardTitle>
 							<CardDescription>
-								Manage business units (Dealership, Auto Rental, etc).
+								Single node only. Use one centered dealer structure.
 							</CardDescription>
 						</div>
-						<Button
-							type="button"
-							size="sm"
-							onClick={() => appendStruct({ name: "", icon_image: "" })}
-							className="gap-1 bg-blue-600 hover:bg-blue-700 text-white"
-						>
-							<Plus size={16} /> Add Unit
-						</Button>
 					</CardHeader>
 					<CardContent className="pt-6 space-y-6">
 						{structFields.map((item, index) => {
@@ -1494,10 +1496,19 @@ export default function AboutUsForm({
 							return (
 								<div
 									key={item.id}
-									className="relative grid grid-cols-1 md:grid-cols-12 gap-6 p-4 bg-slate-50 rounded-xl border border-slate-200"
+									className="mx-auto flex max-w-sm flex-col items-center justify-center rounded-xl border border-slate-200 bg-slate-50 p-6 text-center"
 								>
-									{/* Structure Icon - SQUARE (1:1) */}
-									<div className="md:col-span-2">
+									<input
+										type="hidden"
+										{...register(`company_structure_list.${index}.name`)}
+									/>
+									<div className="mb-4">
+										<p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+											Department Icon
+										</p>
+										<p className="mt-1 text-sm text-slate-400">Dealer</p>
+									</div>
+									<div className="w-full max-w-[180px]">
 										<ImageUploadField
 											label="Icon (1:1)"
 											preview={preview}
@@ -1508,34 +1519,9 @@ export default function AboutUsForm({
 											aspectClass="aspect-square"
 										/>
 									</div>
-									<div className="md:col-span-9 flex items-center">
-										<FormInput
-											id={`company_structure_list.${index}.name`}
-											label="Unit Name"
-											register={register}
-											error={errors.company_structure_list?.[index]?.name}
-											className="w-full"
-										/>
-									</div>
-									<div className="md:col-span-1 flex justify-center items-center">
-										<Button
-											type="button"
-											variant="ghost"
-											size="icon"
-											className="text-red-500 hover:bg-red-50"
-											onClick={() => removeStruct(index)}
-										>
-											<Trash2 size={18} />
-										</Button>
-									</div>
 								</div>
 							);
 						})}
-						{structFields.length === 0 && (
-							<p className="text-center text-slate-400 italic py-4">
-								No data added yet.
-							</p>
-						)}
 					</CardContent>
 				</Card>
 
