@@ -18,15 +18,17 @@ import {
 	rectSortingStrategy,
 } from "@dnd-kit/sortable";
 import toast from "react-hot-toast";
-import { Plus, Loader2, ArrowLeft } from "lucide-react";
+import { Plus, Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { useConfirmDialog } from "@/components/providers/confirm-dialog-provider";
 import { SortableServiceItem } from "./SortServiceItem";
 
 export default function ServiceItemList() {
 	const [items, setItems] = useState<any[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [isSavingOrder, setIsSavingOrder] = useState(false);
+	const confirmDialog = useConfirmDialog();
 
 	// Sensor untuk Drag & Drop (Mouse & Touch friendly)
 	const sensors = useSensors(
@@ -66,7 +68,12 @@ export default function ServiceItemList() {
 
 	// --- 2. DELETE HANDLER ---
 	const handleDelete = async (id: string) => {
-		if (!confirm("Hapus layanan ini secara permanen?")) return;
+		const confirmed = await confirmDialog({
+			title: "Hapus layanan?",
+			description: "Hapus layanan ini secara permanen?",
+			confirmText: "Hapus",
+		});
+		if (!confirmed) return;
 
 		// Optimistic UI Update
 		const prevItems = [...items];
@@ -82,7 +89,7 @@ export default function ServiceItemList() {
 			);
 			if (!res.ok) throw new Error();
 			toast.success("Service deleted");
-		} catch (e) {
+		} catch {
 			setItems(prevItems); // Rollback
 			toast.error("Gagal menghapus");
 		}
@@ -110,7 +117,7 @@ export default function ServiceItemList() {
 			toast.success(
 				currentStatus ? "Service Deactivated" : "Service Activated",
 			);
-		} catch (e) {
+		} catch {
 			setItems(prevItems); // Rollback
 			toast.error("Gagal mengubah status");
 		}
@@ -147,7 +154,7 @@ export default function ServiceItemList() {
 					},
 				);
 				// Silent success / small toast
-			} catch (e) {
+			} catch {
 				toast.error("Gagal menyimpan urutan");
 				fetchData(); // Revert to server state
 			} finally {

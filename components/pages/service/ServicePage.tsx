@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
+import { useConfirmDialog } from "@/components/providers/confirm-dialog-provider";
 import { cn } from "@/lib/utils";
 
 // Interface sesuai response backend
@@ -33,6 +34,7 @@ export default function ServicePageList() {
 	const [data, setData] = useState<ServicePageData[]>([]);
 	const [loading, setLoading] = useState(true);
 	const router = useRouter();
+	const confirmDialog = useConfirmDialog();
 
 	// --- FETCH DATA ---
 	const fetchData = async () => {
@@ -91,12 +93,13 @@ export default function ServicePageList() {
 
 	// --- DELETE ---
 	const handleDelete = async (id: string) => {
-		if (
-			!confirm(
+		const confirmed = await confirmDialog({
+			title: "Hapus halaman service?",
+			description:
 				"Yakin ingin menghapus? Data dan Item Service terkait mungkin akan hilang.",
-			)
-		)
-			return;
+			confirmText: "Hapus",
+		});
+		if (!confirmed) return;
 
 		try {
 			const res = await fetch(

@@ -65,6 +65,36 @@ interface ReportFormProps {
 	isEditMode?: boolean;
 }
 
+const FRONTEND_ONLY_REPORT_CATEGORIES = [
+	{
+		id: "__virtual__berita",
+		name: "Berita",
+		description: "Kategori berita untuk report yang ditampilkan sebagai highlight news.",
+		isVirtual: true,
+	},
+] as const;
+
+const normalizeCategoryName = (value: string) =>
+	value.trim().toLowerCase().replace(/\s+/g, " ");
+
+const mergeCategoriesWithFrontendDefaults = (items: any[]) => {
+	const merged = [...items];
+
+	for (const frontendCategory of FRONTEND_ONLY_REPORT_CATEGORIES) {
+		const exists = items.some(
+			(item) =>
+				normalizeCategoryName(item.name || "") ===
+				normalizeCategoryName(frontendCategory.name),
+		);
+
+		if (!exists) {
+			merged.push(frontendCategory);
+		}
+	}
+
+	return merged.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+};
+
 const getErrorMessage = (error: any): string | null => {
 	if (!error) return null;
 	if (typeof error.message === "string") return error.message;
@@ -138,9 +168,14 @@ export default function ReportForm({
 					{ credentials: "include" },
 				);
 				const json = await res.json();
-				if (res.ok) setCategories(json.data || []);
+				if (res.ok) {
+					setCategories(
+						mergeCategoriesWithFrontendDefaults(json.data || []),
+					);
+				}
 			} catch (e) {
 				console.error(e);
+				setCategories(mergeCategoriesWithFrontendDefaults([]));
 			}
 		};
 		fetchCats();
@@ -215,7 +250,7 @@ export default function ReportForm({
 	};
 
     // --- AUTO TRANSLATE ---
-    const handleAutoTranslate = async (lang: string) => {
+	const handleAutoTranslate = async (lang: string) => {
         setIsTranslating(true);
         // Note: For report news, we are translating News Content only usually, 
         // but here the news title uses the Report title. 
@@ -259,8 +294,59 @@ export default function ReportForm({
             toast.error("Translation failed: " + error.message);
         } finally {
             setIsTranslating(false);
-        }
-    };
+		}
+	};
+
+	const ensureCategoryId = async (selectedCategoryId: string) => {
+		const virtualCategory = FRONTEND_ONLY_REPORT_CATEGORIES.find(
+			(category) => category.id === selectedCategoryId,
+		);
+		if (!virtualCategory) return selectedCategoryId;
+
+		const existingCategory = categories.find(
+			(category) =>
+				!category.isVirtual &&
+				normalizeCategoryName(category.name || "") ===
+					normalizeCategoryName(virtualCategory.name),
+		);
+		if (existingCategory?.id) {
+			setValue("reportCategoryId", existingCategory.id);
+			return existingCategory.id;
+		}
+
+		const createRes = await fetch(
+			`${process.env.NEXT_PUBLIC_API_URL}/report-category`,
+			{
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				credentials: "include",
+				body: JSON.stringify({
+					name: virtualCategory.name,
+					description: virtualCategory.description,
+				}),
+			},
+		);
+		const createJson = await createRes.json();
+
+		if (!createRes.ok) {
+			throw new Error(createJson.message || "Failed to create category");
+		}
+
+		const createdCategory = createJson.data || createJson;
+		setCategories((prev) =>
+			mergeCategoriesWithFrontendDefaults(
+				prev
+					.filter(
+						(category) =>
+							normalizeCategoryName(category.name || "") !==
+							normalizeCategoryName(virtualCategory.name),
+					)
+					.concat(createdCategory),
+			),
+		);
+		setValue("reportCategoryId", createdCategory.id);
+		return createdCategory.id;
+	};
 
 	const onSubmit = async (data: FormValues) => {
 		if (!isEditMode && !file) {
@@ -277,7 +363,6 @@ export default function ReportForm({
 		formData.append("description_en", data.description_en || "");
 		formData.append("publish_at", data.publish_at.toISOString());
 		formData.append("is_publish", String(data.is_publish));
-		formData.append("reportCategoryId", data.reportCategoryId);
 
 
 		if (file) {
@@ -300,6 +385,9 @@ export default function ReportForm({
         }
 
 		try {
+			const resolvedCategoryId = await ensureCategoryId(data.reportCategoryId);
+			formData.append("reportCategoryId", resolvedCategoryId);
+
 			const url =
 				isEditMode ?
 					`${process.env.NEXT_PUBLIC_API_URL}/report/${initialData.id}`

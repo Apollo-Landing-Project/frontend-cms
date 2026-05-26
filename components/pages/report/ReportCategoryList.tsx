@@ -21,12 +21,12 @@ import {
     DialogContent,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
     DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { useConfirmDialog } from "@/components/providers/confirm-dialog-provider";
 
 // Schema
 const categorySchema = z.object({
@@ -54,6 +54,7 @@ export default function ReportCategoryList() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [currentId, setCurrentId] = useState<string | null>(null);
+    const confirmDialog = useConfirmDialog();
 
     const form = useForm<CategoryFormValues>({
         resolver: zodResolver(categorySchema),
@@ -114,7 +115,12 @@ export default function ReportCategoryList() {
     };
 
     const handleDelete = async (id: string) => {
-        if (!confirm("Are you sure? Related reports will be deleted.")) return;
+        const confirmed = await confirmDialog({
+            title: "Delete category?",
+            description: "Are you sure? Related reports will be deleted.",
+            confirmText: "Delete",
+        });
+        if (!confirmed) return;
 
         try {
             const res = await fetch(

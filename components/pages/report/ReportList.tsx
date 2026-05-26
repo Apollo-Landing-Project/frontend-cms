@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Edit, Trash2, Plus, FileText, Download, Calendar } from "lucide-react";
 import toast from "react-hot-toast";
 import { format } from "date-fns";
@@ -23,13 +22,14 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { useConfirmDialog } from "@/components/providers/confirm-dialog-provider";
 
 export default function ReportList() {
 	const [data, setData] = useState<any[]>([]);
 	const [categories, setCategories] = useState<any[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [selectedCategory, setSelectedCategory] = useState<string>("all");
-	const router = useRouter();
+	const confirmDialog = useConfirmDialog();
 
 	const fetchCategories = async () => {
 		try {
@@ -44,7 +44,7 @@ export default function ReportList() {
 		}
 	};
 
-	const fetchData = async () => {
+	const fetchData = useCallback(async () => {
 		setLoading(true);
 		try {
 			let url = `${process.env.NEXT_PUBLIC_API_URL}/report`;
@@ -63,7 +63,7 @@ export default function ReportList() {
 		} finally {
 			setLoading(false);
 		}
-	};
+	}, [selectedCategory]);
 
 	useEffect(() => {
 		fetchCategories();
@@ -71,10 +71,15 @@ export default function ReportList() {
 
 	useEffect(() => {
 		fetchData();
-	}, [selectedCategory]);
+	}, [fetchData]);
 
 	const handleDelete = async (id: string) => {
-		if (!confirm("Delete this report permanently?")) return;
+		const confirmed = await confirmDialog({
+			title: "Delete report?",
+			description: "Delete this report permanently?",
+			confirmText: "Delete",
+		});
+		if (!confirmed) return;
 		try {
 			const res = await fetch(
 				`${process.env.NEXT_PUBLIC_API_URL}/report/${id}`,
