@@ -240,18 +240,18 @@ export default function NewsNewsForm({
 
 		const formData = new FormData();
 		if (imageFile) {
-            formData.append("image", imageFile);
-            formData.append("image_status", "change");
-        } else {
-            formData.append("image_status", "keep");
-        }
+			formData.append("image", imageFile);
+			formData.append("image_status", "change");
+		} else {
+			formData.append("image_status", "keep");
+		}
 
 		if (authorImageFile) {
-            formData.append("author_image", authorImageFile);
-            formData.append("author_image_status", "change");
-        } else {
-            formData.append("author_image_status", "keep");
-        }
+			formData.append("author_image", authorImageFile);
+			formData.append("author_image_status", "change");
+		} else {
+			formData.append("author_image_status", "keep");
+		}
 
 		formData.append("title", data.title);
 		formData.append("title_en", data.title_en);
@@ -261,6 +261,7 @@ export default function NewsNewsForm({
 		formData.append("content", contentId);
 		formData.append("content_en", contentEn);
 		if (data.author) formData.append("author", data.author);
+		if (!isEditMode) formData.append("isPublished", "true");
 
 		const url =
 			isEditMode ?
